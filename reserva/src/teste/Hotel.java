@@ -8,7 +8,7 @@ public class Hotel {
 	private String estado;
 	private String cidade;
 	private String nome;
-	private List<Quarto> quartos;
+	private List<TipoQuarto> quartosPorTipo;
 	private List<Reserva> reservas;
 	
 	public Hotel(String idHotel, String endereco, String pais, String estado, String cidade, String nome) {
@@ -18,12 +18,12 @@ public class Hotel {
 		this.estado = estado;
 		this.cidade = cidade;
 		this.nome = nome;
-		this.quartos = new ArrayList<Quarto>();
+		this.quartosPorTipo = new ArrayList<TipoQuarto>();
 		this.reservas = new ArrayList<Reserva>();
 	}
 	
-	public boolean adicionarQuarto(Quarto q) {
-		return quartos.add(q);
+	public boolean adicionarQuarto(TipoQuarto q) {
+		return quartosPorTipo.add(q);
 	}
 	
 	public boolean adicionarReserva(Reserva r) {
@@ -78,12 +78,12 @@ public class Hotel {
 		this.nome = nome;
 	}
 
-	public List<Quarto> getQuartos() {
-		return quartos;
+	public List<TipoQuarto> getQuartos() {
+		return quartosPorTipo;
 	}
 
-	public void setQuartos(List<Quarto> quartos) {
-		this.quartos = quartos;
+	public void setQuartos(List<TipoQuarto> quartos) {
+		this.quartosPorTipo = quartos;
 	}
 
 	public List<Reserva> getReservas() {
