@@ -1,7 +1,7 @@
 package teste;
-
-import java.util.List;
-import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class Reserva {
 	private String id;
@@ -24,11 +24,11 @@ public class Reserva {
 	
 	
 	public double calcularTotal() {
-		double valor = 0;
+		double total = 0;
 		for (int i = 0; i < quartos.size(); i++) {
-			valor += quartos.get(i).retornarValorDiaria();
+			total += quartos.get(i).retornarValorDiaria();
 		}
-		return valor;
+		return total;
 	}
 	
 	
@@ -42,13 +42,36 @@ public class Reserva {
 		this.id = id;
 	}
 
+	
+	public List<Quarto> getQuartos() {
+		return quartos;
+	}
+
+
+	public void setQuartos(List<Quarto> quartos) {
+		this.quartos = quartos;
+	}
+
 
 	@Override
 	public String toString() {
-		return "\nReserva id:" + id + "\nNomeCliente:" + nomeCliente + "\nQuartos:" + quartos + "\nValor: " + valor
-				+ "\nDataIni: " + dataIni + "\nDataFim: " + dataFim;
+		return "\nReserva id:" + id + "\nCliente:" + nomeCliente + "\nQuartos:" + retornarStringComTiposDosQuartos() + "\nValor: " + valor
+				+ "\nDataIni: " + formatarData(dataIni) + "\nDataFim: " + formatarData(dataFim);
 	}
-
 	
+	public String formatarData(Date data) {
+		String pattern = "MM/dd/yyyy";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String date = simpleDateFormat.format(data);
+		
+		return date;
+	}
 	
+	public String retornarStringComTiposDosQuartos() {
+		String s = "";
+		for (Quarto q : quartos) {
+			s += "\n\t" + q.getTipoQuarto();
+		}
+		return s;
+	}
 }

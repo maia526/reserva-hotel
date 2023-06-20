@@ -2,72 +2,82 @@ package teste;
 import java.util.*;
 
 public class Hotel {
-	private String id;
-	private String endereco;
-	private String pais;
-	private String estado;
-	private String cidade;
+	
 	private String nome;
-	private List<TipoQuarto> quartosPorTipo;
+	private List<Quarto> quartosStandart;
+	private List<Quarto> quartosDouble;
+	private List<Quarto> quartosPresidencial;
 	private List<Reserva> reservas;
 	
-	public Hotel(String idHotel, String endereco, String pais, String estado, String cidade, String nome) {
-		this.id = idHotel;
-		this.endereco = endereco;
-		this.pais = pais;
-		this.estado = estado;
-		this.cidade = cidade;
+	public Hotel(String nome, int qtdStandart, int qtdDouble, int qtdPresidencial) {
 		this.nome = nome;
-		this.quartosPorTipo = new ArrayList<TipoQuarto>();
+		this.quartosStandart = inicializarListaQuartos(TipoQuarto.STANDART, qtdStandart);
+		this.quartosDouble = inicializarListaQuartos(TipoQuarto.DOUBLE, qtdDouble);
+		this.quartosPresidencial = inicializarListaQuartos(TipoQuarto.PRESIDENCIAL, qtdPresidencial);
 		this.reservas = new ArrayList<Reserva>();
 	}
 	
-	public boolean adicionarQuarto(TipoQuarto q) {
-		return quartosPorTipo.add(q);
+	public List<Quarto> inicializarListaQuartos(TipoQuarto tipo, int qtd){
+		List<Quarto> lista = new ArrayList<>();
+		
+		int id = 0;
+		for (int i = 0; i < qtd; i++) {
+			Quarto q = new Quarto(tipo, Integer.toString(id));
+			lista.add(q);
+			id++;
+		}
+		
+		return lista;
+	}
+	
+	public Reserva retornaReserva(String id) {
+		Reserva res = null;
+		for (Reserva r : reservas) {
+			if (r.getId().equals(id)) {
+				res = r;
+				reservas.remove(r);
+				return res;
+			}
+		}
+		return res;
+	}
+	
+	public void receberQuarto(Quarto q) {
+		String tipoQuarto = q.getTipoQuarto();
+		switch(tipoQuarto) {
+			case "STANDART":
+				quartosStandart.add(q);
+				break;
+			case "DOUBLE":
+				quartosDouble.add(q);
+				break;
+			case "PRESIDENCIAL":
+				quartosPresidencial.add(q);
+				break;
+		}
+	}
+	
+	public Quarto retornarQuarto(TipoQuarto tipo) {
+		Quarto q = null;
+		switch (tipo) {
+			case STANDART:
+				q = quartosStandart.get(0);
+				quartosStandart.remove(0);
+				break;
+			case DOUBLE:
+				q = quartosDouble.get(0);
+				quartosDouble.remove(0);
+				break;
+			case PRESIDENCIAL:
+				q = quartosPresidencial.get(0);
+				quartosPresidencial.remove(0);
+				break;
+		}
+		return q;
 	}
 	
 	public boolean adicionarReserva(Reserva r) {
 		return reservas.add(r);
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
-
-	public String getPais() {
-		return pais;
-	}
-
-	public void setPais(String pais) {
-		this.pais = pais;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public String getCidade() {
-		return cidade;
-	}
-
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
 	}
 
 	public String getNome() {
@@ -78,14 +88,6 @@ public class Hotel {
 		this.nome = nome;
 	}
 
-	public List<TipoQuarto> getQuartos() {
-		return quartosPorTipo;
-	}
-
-	public void setQuartos(List<TipoQuarto> quartos) {
-		this.quartosPorTipo = quartos;
-	}
-
 	public List<Reserva> getReservas() {
 		return reservas;
 	}
@@ -93,8 +95,30 @@ public class Hotel {
 	public void setReservas(List<Reserva> reservas) {
 		this.reservas = reservas;
 	}
-	
-	
+
+	public List<Quarto> getQuartosStandart() {
+		return quartosStandart;
+	}
+
+	public void setQuartosStandart(List<Quarto> quartosStandart) {
+		this.quartosStandart = quartosStandart;
+	}
+
+	public List<Quarto> getQuartosDouble() {
+		return quartosDouble;
+	}
+
+	public void setQuartosDouble(List<Quarto> quartosDouble) {
+		this.quartosDouble = quartosDouble;
+	}
+
+	public List<Quarto> getQuartosPresidencial() {
+		return quartosPresidencial;
+	}
+
+	public void setQuartosPresidencial(List<Quarto> quartosPresidencial) {
+		this.quartosPresidencial = quartosPresidencial;
+	}
 	
 	
 }

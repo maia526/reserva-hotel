@@ -12,10 +12,18 @@ public class Quarto {
 	public double retornarValorDiaria(){
 		return tipo.getDiaria();
 	}
+	
+	public void setTipoQuarto(TipoQuarto tipo) {
+		this.tipo = tipo;
+	}
+	
+	public String getTipoQuarto() {
+		return tipo.toString();
+	}
 
 	@Override
 	public String toString() {
-		return "\nQuarto tipo: " + tipo;
+		return "\nQuarto " + id + "\nTipo: " + tipo.toString() + "\nCapacidade: " + tipo.getCapacidade();
 	}
-
+	
 }
