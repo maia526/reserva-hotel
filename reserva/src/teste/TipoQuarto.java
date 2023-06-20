@@ -1,72 +1,115 @@
 package teste;
 
-public class Quarto {
-	private String id;
-	private String nome;	//todo: trocar para tipo
+import java.util.*;
+
+public class TipoQuarto {
+	private int id;
+	private String tipo;
 	private String descricao;
 	private int capacidade;
 	private double diaria;
-	private boolean ocupado;
+	private List<Quarto> quartos;
 	
-	public Quarto(String descricao, int capacidade, double diaria, String nome) {
+	public TipoQuarto(String descricao, int capacidade, double diaria, String nome, int qtd) {
 		this.descricao = descricao;
 		this.capacidade = capacidade;
-		this.ocupado = false;
 		this.diaria = diaria;
-		this.nome = nome;
+		this.tipo = nome;
+		this.quartos = inicializarListaQuartos(qtd);
+	}
+	
+	public List<Quarto> inicializarListaQuartos(int qtd){
+		List<Quarto> lista = new ArrayList<Quarto>();
+		int id = 0;
+		for (int i = 0; i < qtd; i++) {
+			Quarto q = new Quarto(this, Integer.toString(id));
+			id++;
+			lista.add(q);
+		}
+		return lista;
 	}
 
-	public String getId() {
+	public boolean verificarDisponibilidade() {
+		return quartos.size() > 0;
+	}
+	
+	public Quarto reservarERetornarUmQuarto() {
+		if (verificarDisponibilidade()) {
+			Quarto q = quartos.get(0);
+			this.quartos.remove(quartos.size()-1);
+			return q;	//indexOutOfBound Exception
+		}
+		System.out.println("Não há disponibilidade.");
+		return null;
+	}
+	
+	public void cancelarReservaDeUmQuarto(Quarto q) {
+		this.quartos.add(q);
+	}
+
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+
+
+	public void setId(int id) {
 		this.id = id;
 	}
+
+
+
+	public String getTipo() {
+		return tipo;
+	}
+
+
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+
 
 	public String getDescricao() {
 		return descricao;
 	}
 
+
+
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+
+
 
 	public int getCapacidade() {
 		return capacidade;
 	}
 
+
+
 	public void setCapacidade(int capacidade) {
 		this.capacidade = capacidade;
 	}
+
+
 
 	public double getDiaria() {
 		return diaria;
 	}
 
+
+
 	public void setDiaria(double diaria) {
 		this.diaria = diaria;
 	}
 
-	public boolean isOcupado() {
-		return ocupado;
-	}
 
-	public void setOcupado(boolean ocupado) {
-		this.ocupado = ocupado;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
 
 	@Override
 	public String toString() {
-		return "\n" + nome + "\nDescricao: " + descricao + "\nCapacidade: " + capacidade + "\nDiaria=" + diaria;
+		return "\n" + tipo + "\nDescricao: " + descricao + "\nCapacidade: " + capacidade + "\nDiaria=" + diaria + "\nDisponível: " + quartos.size();
 	}
 
 	

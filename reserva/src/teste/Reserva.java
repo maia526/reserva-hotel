@@ -22,18 +22,31 @@ public class Reserva {
 		this.valor = calcularTotal();
 		}
 	
+	
 	public double calcularTotal() {
 		double valor = 0;
 		for (int i = 0; i < quartos.size(); i++) {
-			valor += quartos.get(i).getDiaria();
+			valor += quartos.get(i).retornarValorDiaria();
 		}
 		return valor;
 	}
+	
+	
+
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 
 	@Override
 	public String toString() {
-		return "\nReserva " + id + "\nNomeCliente:" + nomeCliente + "\nQuartos:" + quartos + "\nValor: " + valor
-				+ "\nDataIni: " + dataIni + "\nDataFim: " + dataFim + "\nCancelada: " + cancelada;
+		return "\nReserva id:" + id + "\nNomeCliente:" + nomeCliente + "\nQuartos:" + quartos + "\nValor: " + valor
+				+ "\nDataIni: " + dataIni + "\nDataFim: " + dataFim;
 	}
 
 	
