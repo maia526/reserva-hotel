@@ -24,69 +24,64 @@ public class Menu {
 	}
 	
 	public void relizarOpcao(int opc) throws ParseException {
-		if (opc == 1) {
-			//mostrar quartos
+		boolean fez;
+		switch(opc) {
+		case 1:
 			mostrarQuartos();
-		}
-		if (opc == 2) {
-			//mostrar quartos disponíveis
+			break;
+		case 2:
 			mostrarQuartosDisponiveis();
-		}
-		if (opc == 3) {
+			break;
+		case 3: 
 			//fazer reserva
-			boolean fez = fazerReserva();
+			fez = fazerReserva();
 			if (fez)
 				System.out.println("Reserva feita com sucesso!");
 			else
 				System.out.println("Houve problema na reserva.");
-		}
-		if (opc == 5) {
+			break;
+		case 4:
+			//fazer reserva de um quarto específico
+			fez = fazerReservaQuartoEspecifico();
+			if (fez)
+				System.out.println("Reserva feita com sucesso!");
+			else
+				System.out.println("Houve problema na reserva.");
+			break;
+		case 5:
 			//cancelar reserva
 			cancelarReserva();
-		}
-		if (opc == 6) {
+			break;
+		case 6:
 			//mostrar reservas
 			mostrarReservas();
-		}
-		if (opc == 0)
+			break;
+		case 0:
 			System.out.println("Fim do programa");
+			break;
+		default:
+			System.out.println("Opção inválida.");		
+		}
 	}
 	
-	public void mostrarQuartos() {
-		List<Quarto> quartos= hotel.getQuartosStandart();
-		
-		System.out.println("\nTipo: " + TipoQuarto.STANDART.toString() + "\nDescrição: " + TipoQuarto.STANDART.getDescricao() + 
-				"\nCapacidade: " + TipoQuarto.STANDART.getCapacidade() + "\nDiaria: " + TipoQuarto.STANDART.getDiaria() + 
-				"\nDisponíveis: " + quartos.size());
-		quartos = hotel.getQuartosDouble();
-		System.out.println("\nTipo: " + TipoQuarto.DOUBLE.toString() + "\nDescrição: " + TipoQuarto.DOUBLE.getDescricao() + 
-				"\nCapacidade: " + TipoQuarto.DOUBLE.getCapacidade() + "\nDiaria: " + TipoQuarto.DOUBLE.getDiaria() + 
-				"\nDisponíveis: " + quartos.size());
-		
-		quartos = hotel.getQuartosPresidencial();
-		System.out.println("\nTipo: " + TipoQuarto.PRESIDENCIAL.toString() + "\nDescrição: " + TipoQuarto.PRESIDENCIAL.getDescricao() + 
-				"\nCapacidade: " + TipoQuarto.PRESIDENCIAL.getCapacidade() + "\nDiaria: " + TipoQuarto.PRESIDENCIAL.getDiaria() + 
-				"\nDisponíveis: " + quartos.size());
+	public void mostrarQuartos() {		
+		for (TipoQuarto tipo : TipoQuarto.values()) {
+			List<Quarto> quartos= hotel.retornarListaDeQuartos(tipo);
+			System.out.println("\nTipo: " + tipo.toString() + "\nDescrição: " + tipo.getDescricao() + 
+					"\nCapacidade: " + tipo.getCapacidade() + "\nDiaria: " + tipo.getDiaria() + 
+					"\nDisponíveis: " + quartos.size());
+		}
 	}
 	
 	public void mostrarQuartosDisponiveis() {
-		List<Quarto> quartos= hotel.getQuartosStandart();
-		
-		if (!quartos.isEmpty())
-			System.out.println("\nTipo: " + TipoQuarto.STANDART.toString() + "\nDescrição: " + TipoQuarto.STANDART.getDescricao() + 
-					"\nCapacidade: " + TipoQuarto.STANDART.getCapacidade() + "\nDiaria: " + TipoQuarto.STANDART.getDiaria() + 
-					"\nDisponíveis: " + quartos.size());
-		quartos = hotel.getQuartosDouble();
-		if (!quartos.isEmpty())
-			System.out.println("\nTipo: " + TipoQuarto.DOUBLE.toString() + "\nDescrição: " + TipoQuarto.DOUBLE.getDescricao() + 
-					"\nCapacidade: " + TipoQuarto.DOUBLE.getCapacidade() + "\nDiaria: " + TipoQuarto.DOUBLE.getDiaria() + 
-					"\nDisponíveis: " + quartos.size());
-		
-		quartos = hotel.getQuartosPresidencial();
-		if (!quartos.isEmpty())
-			System.out.println("\nTipo: " + TipoQuarto.PRESIDENCIAL.toString() + "\nDescrição: " + TipoQuarto.PRESIDENCIAL.getDescricao() + 
-					"\nCapacidade: " + TipoQuarto.PRESIDENCIAL.getCapacidade() + "\nDiaria: " + TipoQuarto.PRESIDENCIAL.getDiaria() + 
-					"\nDisponíveis: " + quartos.size());
+		for (TipoQuarto tipo : TipoQuarto.values()) {
+			List<Quarto> quartos= hotel.retornarListaDeQuartos(tipo);
+			if (!quartos.isEmpty()) {
+				System.out.println("\nTipo: " + tipo.toString() + "\nDescrição: " + tipo.getDescricao() + 
+						"\nCapacidade: " + tipo.getCapacidade() + "\nDiaria: " + tipo.getDiaria() + 
+						"\nDisponíveis: " + quartos.size());
+			}
+		}
 	}
 	
 	public void mostrarReservas() {
@@ -135,10 +130,68 @@ public class Menu {
 	
 	public void devolverQuartosParaHotel(List<Quarto> quartos) {
 		for (Quarto q : quartos) {
-			hotel.receberQuarto(q);
+			hotel.devolverQuartoParaHotel(q);
 		}
 	}
-
+	
+	public boolean fazerReservaQuartoEspecifico() {
+		String nomeCliente = pegarNome();
+		
+		List<Quarto> quartosReserva = pegarQuartosReservaEspecifica();
+		
+		Date dataIni = pegarDataInicio();
+		
+		//pega data checkout
+		Date dataFim = pegarDataFinal(dataIni);
+		
+		//cria a reserva
+		String id = Integer.toString(gerarIdReserva());
+		
+		Reserva reserva = new Reserva(nomeCliente, quartosReserva, dataIni, dataFim, id);
+		return hotel.adicionarReserva(reserva);	
+		
+	}
+	
+	public List<Quarto> pegarQuartosReservaEspecifica(){
+		List<Quarto> quartosReserva = new ArrayList<Quarto>();
+		String id = "";
+		boolean ativo = true;
+		String tipoQuarto = "";
+		while (ativo) {
+			System.out.print("\nTipo do quarto (para fim digite 0): ");
+			tipoQuarto = lerString().toUpperCase();
+			if (tipoQuarto.equals("0"))
+				ativo = false;
+			if (ativo) {
+				ativo = true;
+				id = pegarIdQuarto(tipoQuarto);
+				Quarto q = retornarQuarto(tipoQuarto, id);
+				
+				if (q == null)
+					ativo = false;
+				else
+					quartosReserva.add(q);
+				}
+			}
+		return quartosReserva;
+	}
+	
+	public String pegarIdQuarto(String tipo) {
+		boolean ativo = true;
+		String id = "";
+		while(ativo) {
+			System.out.print("\nDigite o ID do quarto desejado: ");
+			id = lerString();
+			
+			if (hotel.verificarSeQuartoExiste(id, tipo)) {
+				ativo = false;
+			}
+			else
+				System.out.println("ID do quarto não existe, ou quarto já está reservado.");
+				
+		}
+		return id;
+	}
 	
 	
 	public boolean fazerReserva() throws ParseException {
@@ -182,7 +235,7 @@ public class Menu {
 			System.out.print("\nDigite a data de check-in no formato dd/mm/yyyy: ");
 			String ini = lerString();
 			try {
-				dataIni = new SimpleDateFormat("dd/mm/yyyy").parse(ini);
+				dataIni = new SimpleDateFormat("dd/MM/yyyy").parse(ini);
 			} catch (ParseException e) {
 				System.out.println("Data em formato inválido. Por favor, digite novamente.");
 				ativo = true;
@@ -200,7 +253,7 @@ public class Menu {
 			System.out.print("\nDigite a data de check-out no formato dd/mm/yyyy: ");
 			String fim = lerString();
 			try {
-				dataFim = new SimpleDateFormat("dd/mm/yyyy").parse(fim);
+				dataFim = new SimpleDateFormat("dd/MM/yyyy").parse(fim);
 			} catch (ParseException e) {
 				System.out.println("Data em formato inválido. Por favor, digite novamente.");
 				ativo = true;
@@ -230,42 +283,37 @@ public class Menu {
 		while (ativo) {
 			System.out.print("\nTipo do quarto (para fim digite 0): ");
 			tipoQuarto = lerString().toUpperCase();
+			
 			if (tipoQuarto.equals("0"))
 				ativo = false;
+			
 			if (ativo) {
-				Quarto quarto = retornarQuarto(tipoQuarto);
-				if (quarto != null) {
-					quartosReserva.add(quarto);
+				if (hotel.verificarSePossuiTipo(tipoQuarto)) {
+					Quarto quarto = retornarQuarto(tipoQuarto);
+					if (quarto != null) {
+						quartosReserva.add(quarto);
+					}
 				}
+				else
+					System.out.println("Tipo de quarto inexistente.");
 			}
 		}
 		return quartosReserva;
 	}
 	
-	public Quarto retornarQuarto(String tipo) {
+	public Quarto retornarQuarto(String tipo, String id) {
+		Quarto q = hotel.devolverQuartoEspecificoParaReserva(tipo, id);
+		
+		if (q == null)
+			System.out.println("Quarto não está disponível no momento.");
+		return q;
+	}	
+	
+	public Quarto retornarQuarto(String tipoQuarto) {
 		Quarto q = null;
-		switch (tipo) {
-			case "STANDART":
-				if (hotel.getQuartosStandart().isEmpty())
-					System.out.println("Não há quarto desse tipo disponível atualmente.");
-				else 
-					q = hotel.retornarQuarto(TipoQuarto.STANDART); 
-				break;
-			case "DOUBLE":
-				if (hotel.getQuartosDouble().isEmpty())
-					System.out.println("Não há quarto desse tipo disponível atualmente.");
-				else 
-					q = hotel.retornarQuarto(TipoQuarto.DOUBLE); 
-				break;
-			case "PRESIDENCIAL":
-				if (hotel.getQuartosPresidencial().isEmpty())
-					System.out.println("Não há quarto desse tipo disponível atualmente.");
-				else 
-					q = hotel.retornarQuarto(TipoQuarto.PRESIDENCIAL); 
-				break;
-			default:
-				System.out.println("Tipo de quarto não existe.");
-		}
+		if(hotel.retornarListaDeQuartos(TipoQuarto.valueOf(tipoQuarto)).isEmpty())
+			System.out.println("Não há quarto desse tipo disponível atualmente.");
+		q = hotel.darQuartoParaReserva(tipoQuarto);
 		return q;
 	}
 }

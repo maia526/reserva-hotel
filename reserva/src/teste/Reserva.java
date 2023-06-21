@@ -60,7 +60,7 @@ public class Reserva {
 	}
 	
 	public String formatarData(Date data) {
-		String pattern = "MM/dd/yyyy";
+		String pattern = "dd/MM/yyyy";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String date = simpleDateFormat.format(data);
 		

@@ -17,10 +17,13 @@ public class Quarto {
 		this.tipo = tipo;
 	}
 	
-	public String getTipoQuarto() {
-		return tipo.toString();
+	public TipoQuarto getTipoQuarto() {
+		return tipo;
 	}
 
+	public String getId() {
+		return this.id;
+	}
 	@Override
 	public String toString() {
 		return "\nQuarto " + id + "\nTipo: " + tipo.toString() + "\nCapacidade: " + tipo.getCapacidade();

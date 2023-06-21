@@ -4,22 +4,20 @@ import java.util.*;
 public class Hotel {
 	
 	private String nome;
-	private List<Quarto> quartosStandart;
-	private List<Quarto> quartosDouble;
-	private List<Quarto> quartosPresidencial;
 	private List<Reserva> reservas;
+	private Map<TipoQuarto, List<Quarto>> quartosPorTipo;
 	
-	public Hotel(String nome, int qtdStandart, int qtdDouble, int qtdPresidencial) {
+	public Hotel(String nome, int qtdStandard, int qtdDouble, int qtdPresidencial) {
 		this.nome = nome;
-		this.quartosStandart = inicializarListaQuartos(TipoQuarto.STANDART, qtdStandart);
-		this.quartosDouble = inicializarListaQuartos(TipoQuarto.DOUBLE, qtdDouble);
-		this.quartosPresidencial = inicializarListaQuartos(TipoQuarto.PRESIDENCIAL, qtdPresidencial);
 		this.reservas = new ArrayList<Reserva>();
+		this.quartosPorTipo = new HashMap<TipoQuarto, List<Quarto>>();
+		this.quartosPorTipo.put(TipoQuarto.STANDARD, inicializarListaQuartos(TipoQuarto.STANDARD, qtdStandard));
+		this.quartosPorTipo.put(TipoQuarto.DOUBLE, inicializarListaQuartos(TipoQuarto.DOUBLE, qtdDouble));
+		this.quartosPorTipo.put(TipoQuarto.PRESIDENCIAL, inicializarListaQuartos(TipoQuarto.PRESIDENCIAL, qtdPresidencial));
 	}
 	
 	public List<Quarto> inicializarListaQuartos(TipoQuarto tipo, int qtd){
 		List<Quarto> lista = new ArrayList<>();
-		
 		int id = 0;
 		for (int i = 0; i < qtd; i++) {
 			Quarto q = new Quarto(tipo, Integer.toString(id));
@@ -28,6 +26,14 @@ public class Hotel {
 		}
 		
 		return lista;
+	}
+	
+	public boolean verificarSePossuiTipo(String tipoQuarto) {
+		for (TipoQuarto tipo : TipoQuarto.values()) {
+			if (tipo.equals(TipoQuarto.valueOf(tipoQuarto)))
+				return true;
+		}
+		return false;
 	}
 	
 	public Reserva retornaReserva(String id) {
@@ -42,38 +48,40 @@ public class Hotel {
 		return res;
 	}
 	
-	public void receberQuarto(Quarto q) {
-		String tipoQuarto = q.getTipoQuarto();
-		switch(tipoQuarto) {
-			case "STANDART":
-				quartosStandart.add(q);
-				break;
-			case "DOUBLE":
-				quartosDouble.add(q);
-				break;
-			case "PRESIDENCIAL":
-				quartosPresidencial.add(q);
-				break;
-		}
+	public void devolverQuartoParaHotel(Quarto q) {
+		List<Quarto> quartos = quartosPorTipo.get(q.getTipoQuarto());
+		quartos.add(q);
 	}
 	
-	public Quarto retornarQuarto(TipoQuarto tipo) {
+	public Quarto darQuartoParaReserva(String tipoQuarto) {
+		List<Quarto> quartos = quartosPorTipo.get(TipoQuarto.valueOf(tipoQuarto)); 
+		Quarto quarto = quartos.get(0);
+		quartos.remove(0);
+		//quartosPorTipo.put(tipoQuarto, quartos);	//não sei se esse é necesário
+		return quarto;
+	}
+	
+	public Quarto devolverQuartoEspecificoParaReserva(String tipoQuarto, String id) {
+		List<Quarto> quartos = quartosPorTipo.get(TipoQuarto.valueOf(tipoQuarto));
 		Quarto q = null;
-		switch (tipo) {
-			case STANDART:
-				q = quartosStandart.get(0);
-				quartosStandart.remove(0);
+		for (Quarto quarto : quartos) {
+			if (quarto.getId().equals(id)) {
+				q = quarto;
 				break;
-			case DOUBLE:
-				q = quartosDouble.get(0);
-				quartosDouble.remove(0);
-				break;
-			case PRESIDENCIAL:
-				q = quartosPresidencial.get(0);
-				quartosPresidencial.remove(0);
-				break;
+			}
 		}
+		quartos.remove(q);
+		//quartosPorTipo.put(tipo, quartos);
 		return q;
+	}
+	
+	public boolean verificarSeQuartoExiste(String id, String tipoQuarto) {
+		List<Quarto> quartos = quartosPorTipo.get(TipoQuarto.valueOf(tipoQuarto));
+		for (Quarto q : quartos) {
+			if (q.getId().equals(id))
+				return true;
+		}
+		return false;
 	}
 	
 	public boolean adicionarReserva(Reserva r) {
@@ -95,30 +103,8 @@ public class Hotel {
 	public void setReservas(List<Reserva> reservas) {
 		this.reservas = reservas;
 	}
-
-	public List<Quarto> getQuartosStandart() {
-		return quartosStandart;
-	}
-
-	public void setQuartosStandart(List<Quarto> quartosStandart) {
-		this.quartosStandart = quartosStandart;
-	}
-
-	public List<Quarto> getQuartosDouble() {
-		return quartosDouble;
-	}
-
-	public void setQuartosDouble(List<Quarto> quartosDouble) {
-		this.quartosDouble = quartosDouble;
-	}
-
-	public List<Quarto> getQuartosPresidencial() {
-		return quartosPresidencial;
-	}
-
-	public void setQuartosPresidencial(List<Quarto> quartosPresidencial) {
-		this.quartosPresidencial = quartosPresidencial;
-	}
 	
-	
+	public List<Quarto> retornarListaDeQuartos(TipoQuarto tipoQuarto){
+		return quartosPorTipo.get(tipoQuarto);
+	}
 }
