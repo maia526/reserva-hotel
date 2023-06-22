@@ -6,7 +6,6 @@ import java.util.*;
 
 public class Menu {
 	private Hotel hotel;
-	private Scanner input;
 	
 	public Menu(Hotel hotel) {
 		this.hotel = hotel;
@@ -85,6 +84,7 @@ public class Menu {
 	}
 	
 	public void mostrarReservas() {
+		System.out.println("--------------------------------");
 		List<Reserva> reservas = hotel.getReservas();
 		if (reservas.isEmpty())
 			System.out.println("Não há reservas atualmente.");

@@ -29,8 +29,12 @@ public class Hotel {
 	}
 	
 	public boolean verificarSePossuiTipo(String tipoQuarto) {
+		List<String> listaNomesTiposQuarto = new ArrayList<String>();
 		for (TipoQuarto tipo : TipoQuarto.values()) {
-			if (tipo.equals(TipoQuarto.valueOf(tipoQuarto)))
+			listaNomesTiposQuarto.add(tipo.toString());
+		}
+		for (String nomeTipo : listaNomesTiposQuarto) {
+			if (nomeTipo.equals(tipoQuarto))
 				return true;
 		}
 		return false;
@@ -57,7 +61,6 @@ public class Hotel {
 		List<Quarto> quartos = quartosPorTipo.get(TipoQuarto.valueOf(tipoQuarto)); 
 		Quarto quarto = quartos.get(0);
 		quartos.remove(0);
-		//quartosPorTipo.put(tipoQuarto, quartos);	//não sei se esse é necesário
 		return quarto;
 	}
 	
@@ -71,7 +74,6 @@ public class Hotel {
 			}
 		}
 		quartos.remove(q);
-		//quartosPorTipo.put(tipo, quartos);
 		return q;
 	}
 	

@@ -6,7 +6,7 @@ public class Quarto {
 	
 	public Quarto(TipoQuarto tipo, String id) {
 		this.tipo = tipo;
-		this.id = id;
+		this.id = id; 
 	}
 	
 	public double retornarValorDiaria(){

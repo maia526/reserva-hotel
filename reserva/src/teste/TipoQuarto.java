@@ -6,7 +6,7 @@ public enum TipoQuarto {	//todo: mudar o nome para TipoQuarto quando terminar
 	PRESIDENCIAL(2, 350, "Uma quarto de luxo.");
 	
 	private int capacidade;
-	private double diaria;
+	private double diaria; 
 	private String descricao;
 	
 	private TipoQuarto(int capacidade, double diaria, String descricao) {
