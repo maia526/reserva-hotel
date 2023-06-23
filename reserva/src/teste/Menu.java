@@ -2,13 +2,17 @@ package teste;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Menu {
 	private Hotel hotel;
+	final DateTimeFormatter formatter;
 	
 	public Menu(Hotel hotel) {
 		this.hotel = hotel;
+		this.formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	}
 	
 	public void mostrarMenu() throws ParseException {
@@ -95,8 +99,7 @@ public class Menu {
 	
 	public String lerString() {
 		Scanner input = new Scanner(System.in);
-		String s = input.nextLine().toUpperCase();
-		return s;
+		return input.nextLine().toUpperCase();
 	}
 	
 	public boolean cancelarReserva() {
@@ -139,10 +142,10 @@ public class Menu {
 		
 		List<Quarto> quartosReserva = pegarQuartosReservaEspecifica();
 		
-		Date dataIni = pegarDataInicio();
+		LocalDateTime dataIni = pegarDataInicio();
 		
 		//pega data checkout
-		Date dataFim = pegarDataFinal(dataIni);
+		LocalDateTime dataFim = pegarDataFinal(dataIni);
 		
 		//cria a reserva
 		String id = Integer.toString(gerarIdReserva());
@@ -153,7 +156,7 @@ public class Menu {
 	}
 	
 	public List<Quarto> pegarQuartosReservaEspecifica(){
-		List<Quarto> quartosReserva = new ArrayList<Quarto>();
+		List<Quarto> quartosReserva = new ArrayList<>();
 		String id = "";
 		boolean ativo = true;
 		String tipoQuarto = "";
@@ -163,7 +166,6 @@ public class Menu {
 			if (tipoQuarto.equals("0"))
 				ativo = false;
 			if (ativo) {
-				ativo = true;
 				id = pegarIdQuarto(tipoQuarto);
 				Quarto q = retornarQuarto(tipoQuarto, id);
 				
@@ -198,14 +200,16 @@ public class Menu {
 		//pega o nome do cliente
 		String nomeCliente = pegarNome();
 		
-		//pega os tipos de quarto escolhidos
-		List<Quarto> quartosReserva = retornarListaQuartosCliente();
-		
 		//pega data de checkin
-		Date dataIni = pegarDataInicio();
+		LocalDateTime dataIni = pegarDataInicio();
 		
 		//pega data checkout
-		Date dataFim = pegarDataFinal(dataIni);
+		LocalDateTime dataFim = pegarDataFinal(dataIni);
+		
+		//pega os tipos de quarto escolhidos
+		List<Quarto> quartosReserva = retornarListaQuartosCliente(dataIni, dataFim);
+		
+		
 		
 		//cria a reserva
 		String id = Integer.toString(gerarIdReserva());
@@ -227,38 +231,30 @@ public class Menu {
 		return nomeCliente;
 	}
 	
-	public Date pegarDataInicio() {
+	public LocalDateTime pegarDataInicio() {
+		
 		boolean ativo = true;
-		Date dataIni = null;
+		LocalDateTime dataIni = null;
 		while (ativo) {
 			ativo = false;
 			System.out.print("\nDigite a data de check-in no formato dd/mm/yyyy: ");
 			String ini = lerString();
-			try {
-				dataIni = new SimpleDateFormat("dd/MM/yyyy").parse(ini);
-			} catch (ParseException e) {
-				System.out.println("Data em formato inválido. Por favor, digite novamente.");
-				ativo = true;
-			}
+			dataIni = LocalDateTime.parse(ini, formatter);
 		}
 		return dataIni;
 	}
 	
-	public Date pegarDataFinal(Date inicio) {
+	public LocalDateTime pegarDataFinal(LocalDateTime inicio) {
 		
 		boolean ativo = true;
-		Date dataFim = null;
+		LocalDateTime dataFim = null;
 		while(ativo) {
 			ativo = false;
 			System.out.print("\nDigite a data de check-out no formato dd/mm/yyyy: ");
 			String fim = lerString();
-			try {
-				dataFim = new SimpleDateFormat("dd/MM/yyyy").parse(fim);
-			} catch (ParseException e) {
-				System.out.println("Data em formato inválido. Por favor, digite novamente.");
-				ativo = true;
-			}
 			
+			dataFim = LocalDateTime.parse(fim, formatter);
+		
 			if (dataFim.compareTo(inicio) < 0) {
 				System.out.println("Data inválida, por favor digite uma data de checkout posterior à data de checkin.");
 				ativo = true;
@@ -276,8 +272,8 @@ public class Menu {
 		return id;
 	}
 	
-	public List<Quarto> retornarListaQuartosCliente(){
-		List<Quarto> quartosReserva = new ArrayList<Quarto>();
+	public List<Quarto> retornarListaQuartosCliente(LocalDateTime dataIni, LocalDateTime dataFim){
+		List<Quarto> quartosReserva = new ArrayList<>();
 		boolean ativo = true;
 		String tipoQuarto = "";
 		while (ativo) {
@@ -289,7 +285,7 @@ public class Menu {
 			
 			if (ativo) {
 				if (hotel.verificarSePossuiTipo(tipoQuarto)) {
-					Quarto quarto = retornarQuarto(tipoQuarto);
+					Quarto quarto = retornarQuarto(tipoQuarto, dataIni, dataFim);	//fazer o retornarQuarto retornar uma cópia do quarto, ou o id e tipo dele ou invés do objeto em si
 					if (quarto != null) {
 						quartosReserva.add(quarto);
 					}
@@ -309,11 +305,11 @@ public class Menu {
 		return q;
 	}	
 	
-	public Quarto retornarQuarto(String tipoQuarto) {
+	public Quarto retornarQuarto(String tipoQuarto, LocalDateTime dataIni, LocalDateTime dataFim) {
 		Quarto q = null;
-		if(hotel.retornarListaDeQuartos(TipoQuarto.valueOf(tipoQuarto)).isEmpty())
+		if(hotel.retornarListaDeQuartos(TipoQuarto.valueOf(tipoQuarto)).isEmpty())	
 			System.out.println("Não há quarto desse tipo disponível atualmente.");
-		q = hotel.darQuartoParaReserva(tipoQuarto);
+		q = hotel.darQuartoParaReserva(tipoQuarto, dataIni, dataFim);
 		return q;
 	}
 }

@@ -1,4 +1,5 @@
 package teste;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Hotel {
@@ -9,7 +10,7 @@ public class Hotel {
 	
 	public Hotel(String nome, int qtdStandard, int qtdDouble, int qtdPresidencial) {
 		this.nome = nome;
-		this.reservas = new ArrayList<Reserva>();
+		this.reservas = new ArrayList<>();
 		this.quartosPorTipo = new HashMap<TipoQuarto, List<Quarto>>();
 		this.quartosPorTipo.put(TipoQuarto.STANDARD, inicializarListaQuartos(TipoQuarto.STANDARD, qtdStandard));
 		this.quartosPorTipo.put(TipoQuarto.DOUBLE, inicializarListaQuartos(TipoQuarto.DOUBLE, qtdDouble));
@@ -29,7 +30,7 @@ public class Hotel {
 	}
 	
 	public boolean verificarSePossuiTipo(String tipoQuarto) {
-		List<String> listaNomesTiposQuarto = new ArrayList<String>();
+		List<String> listaNomesTiposQuarto = new ArrayList<>();
 		for (TipoQuarto tipo : TipoQuarto.values()) {
 			listaNomesTiposQuarto.add(tipo.toString());
 		}
@@ -57,11 +58,28 @@ public class Hotel {
 		quartos.add(q);
 	}
 	
-	public Quarto darQuartoParaReserva(String tipoQuarto) {
+	//todo: trocar date pra localdatetime
+	public Quarto darQuartoParaReserva(String tipoQuarto, LocalDateTime dataIni, LocalDateTime dataFim) {
 		List<Quarto> quartos = quartosPorTipo.get(TipoQuarto.valueOf(tipoQuarto)); 
+		//todo: verificar para cada quarto se ele está disponiível na data da reserva e retorna o primeiro que estiver. Caso contrário retorna null
+		//cada quarto agora tem uma lista de vetores com as datas de inicio e fim de cada reserva existente
+		for (Quarto quarto : quartos) {
+			List<LocalDateTime[]> datasReserva = quarto.getDatasReservas();
+			for(LocalDateTime[] datas : datasReserva) {
+				LocalDateTime ini = datas[0];
+				LocalDateTime fim = datas[1];
+				
+				
+			}
+		}
 		Quarto quarto = quartos.get(0);
 		quartos.remove(0);
 		return quarto;
+	}
+	
+	public boolean verificarDisponibilidade(LocalDateTime[] datasReservaExistente, LocalDateTime dataIni, LocalDateTime dataFim) {
+		
+		return false;
 	}
 	
 	public Quarto devolverQuartoEspecificoParaReserva(String tipoQuarto, String id) {

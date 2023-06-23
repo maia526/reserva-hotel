@@ -1,6 +1,6 @@
 package teste;
 
-public enum TipoQuarto {	//todo: mudar o nome para TipoQuarto quando terminar
+public enum TipoQuarto {
 	DOUBLE(2, 200, "Um quarto duplo."),
 	STANDARD(1, 130, "Um quarto normal."),
 	PRESIDENCIAL(2, 350, "Uma quarto de luxo.");
@@ -20,25 +20,14 @@ public enum TipoQuarto {	//todo: mudar o nome para TipoQuarto quando terminar
 		return capacidade;
 	}
 
-	public void setCapacidade(int capacidade) {
-		this.capacidade = capacidade;
-	}
 
 	public double getDiaria() {
 		return diaria;
 	}
 
-	public void setDiaria(double diaria) {
-		this.diaria = diaria;
-	}
 
 	public String getDescricao() {
 		return descricao;
 	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-	
 	
 }
