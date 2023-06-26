@@ -1,18 +1,24 @@
 package teste;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class Quarto {
 	private TipoQuarto tipo;
 	private String id;
-	private List<LocalDateTime[]>datasReservas;	//uma lista de vetores de tamanho 2 que guardem a data de inicio e fim de uma reserva
+	private List<LocalDate[]>datasReservas;	//uma lista de vetores de tamanho 2 que guardem a data de inicio e fim de uma reserva
 	
 	public Quarto(TipoQuarto tipo, String id) {
 		this.tipo = tipo;
 		this.id = id; 
 		this.datasReservas = new ArrayList<>();
 	}
+	
+	public void adcionarDatasReserva(LocalDate[] datas) {
+		datasReservas.add(datas);
+	}
+	
 	
 	public double retornarValorDiaria(){
 		return tipo.getDiaria();
@@ -22,11 +28,11 @@ public class Quarto {
 		this.tipo = tipo;
 	}
 
-	public List<LocalDateTime[]> getDatasReservas() {
+	public List<LocalDate[]> getDatasReservas() {
 		return datasReservas;
 	}
 
-	public void setDatasReservas(List<LocalDateTime[]> datasReservas) {
+	public void setDatasReservas(List<LocalDate[]> datasReservas) {
 		this.datasReservas = datasReservas;
 	}
 

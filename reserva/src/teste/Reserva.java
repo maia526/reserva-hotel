@@ -1,7 +1,8 @@
 package teste;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Reserva {
@@ -9,16 +10,18 @@ public class Reserva {
 	private String nomeCliente;
 	private List<Quarto> quartos;
 	private double valor;
-	private LocalDateTime dataIni;
-	private LocalDateTime dataFim;
+	private LocalDate dataIni;
+	private LocalDate dataFim;
+	final DateTimeFormatter formatter;
 	
-	public Reserva(String nomeCliente, List<Quarto> quartos, LocalDateTime dataIni, LocalDateTime dataFim, String id) {
+	public Reserva(String nomeCliente, List<Quarto> quartos, LocalDate dataIni, LocalDate dataFim, String id) {
 		this.nomeCliente = nomeCliente;
 		this.quartos = quartos;
 		this.dataIni = dataIni;
 		this.dataFim = dataFim;
 		this.id = id;
 		this.valor = calcularTotal();
+		this.formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		}
 	
 	public double calcularTotal() {
@@ -27,6 +30,23 @@ public class Reserva {
 			total += quartos.get(i).retornarValorDiaria();
 		}
 		return total;
+	}
+
+	
+	public LocalDate getDataIni() {
+		return dataIni;
+	}
+
+	public void setDataIni(LocalDate dataIni) {
+		this.dataIni = dataIni;
+	}
+
+	public LocalDate getDataFim() {
+		return dataFim;
+	}
+
+	public void setDataFim(LocalDate dataFim) {
+		this.dataFim = dataFim;
 	}
 
 	public String getId() {
@@ -48,13 +68,7 @@ public class Reserva {
 	@Override
 	public String toString() {
 		return "\nReserva id:" + id + "\nCliente:" + nomeCliente + "\nQuartos:" + retornarStringComTiposDosQuartos() + "\nValor: " + valor
-				+ "\nDataIni: " + formatarData(dataIni) + "\nDataFim: " + formatarData(dataFim);
-	}
-	
-	public String formatarData(LocalDateTime data) {
-		String pattern = "dd/MM/yyyy";
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		return simpleDateFormat.format(data);
+				+ "\nDataIni: " + dataIni.toString() + "\nDataFim: " + dataFim.toString();
 	}
 	
 	public String retornarStringComTiposDosQuartos() {

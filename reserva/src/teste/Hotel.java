@@ -1,4 +1,5 @@
 package teste;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -29,6 +30,19 @@ public class Hotel {
 		return lista;
 	}
 	
+	public Quarto encontrarQuartoDaReserva(TipoQuarto tipoQuarto, LocalDate ini, LocalDate fim) {
+		List<Quarto> quartos = quartosPorTipo.get(tipoQuarto);
+		for (Quarto quarto : quartos) {
+			List<LocalDate[]> datas = quarto.getDatasReservas();
+			for (LocalDate[] data : datas) {
+				if (data[0].equals(ini) && data[1].equals(fim))
+					return quarto;
+			}
+		}
+		System.out.println("Quarto não encontrado.");
+		return null;
+	}
+	
 	public boolean verificarSePossuiTipo(String tipoQuarto) {
 		List<String> listaNomesTiposQuarto = new ArrayList<>();
 		for (TipoQuarto tipo : TipoQuarto.values()) {
@@ -53,46 +67,56 @@ public class Hotel {
 		return res;
 	}
 	
-	public void devolverQuartoParaHotel(Quarto q) {
-		List<Quarto> quartos = quartosPorTipo.get(q.getTipoQuarto());
-		quartos.add(q);
-	}
-	
-	//todo: trocar date pra localdatetime
-	public Quarto darQuartoParaReserva(String tipoQuarto, LocalDateTime dataIni, LocalDateTime dataFim) {
+	public Quarto darQuartoParaReserva(String tipoQuarto, LocalDate dataIni, LocalDate dataFim) {
 		List<Quarto> quartos = quartosPorTipo.get(TipoQuarto.valueOf(tipoQuarto)); 
-		//todo: verificar para cada quarto se ele está disponiível na data da reserva e retorna o primeiro que estiver. Caso contrário retorna null
-		//cada quarto agora tem uma lista de vetores com as datas de inicio e fim de cada reserva existente
+		boolean disponivel = true;
 		for (Quarto quarto : quartos) {
-			List<LocalDateTime[]> datasReserva = quarto.getDatasReservas();
-			for(LocalDateTime[] datas : datasReserva) {
-				LocalDateTime ini = datas[0];
-				LocalDateTime fim = datas[1];
-				
-				
+			List<LocalDate[]> datasReserva = quarto.getDatasReservas();
+			for (LocalDate[] datas : datasReserva) {
+				disponivel = verificarDisponibilidade(datas, dataIni, dataFim);
 			}
+			if (disponivel) {
+				LocalDate[] datas = {dataIni, dataFim};
+				quarto.adcionarDatasReserva(datas);
+				return quarto;
+			}	
 		}
-		Quarto quarto = quartos.get(0);
-		quartos.remove(0);
-		return quarto;
+		System.out.println("Não há quarto desse tipo disponível no período desejado.");
+		return null;
 	}
 	
-	public boolean verificarDisponibilidade(LocalDateTime[] datasReservaExistente, LocalDateTime dataIni, LocalDateTime dataFim) {
+	public boolean verificarDisponibilidade(LocalDate[] datasReservaExistente, LocalDate dataIni, LocalDate dataFim) {
+		LocalDate ini = datasReservaExistente[0];
+		LocalDate fim = datasReservaExistente[1];
 		
-		return false;
+		if( (dataIni.isBefore(ini) && ini.isBefore(dataFim) && dataFim.isBefore(fim)) || 
+			(ini.isBefore(dataIni) && dataIni.isBefore(fim) && fim.isBefore(dataFim)) || 
+			(ini.isBefore(dataIni) && ini.isBefore(dataFim) && dataIni.isBefore(fim) && dataFim.isBefore(fim)))
+			return false;
+		return true;
 	}
 	
-	public Quarto devolverQuartoEspecificoParaReserva(String tipoQuarto, String id) {
+	
+	
+	public Quarto devolverQuartoEspecificoParaReserva(String tipoQuarto, String id, LocalDate dataIni, LocalDate dataFim) {
 		List<Quarto> quartos = quartosPorTipo.get(TipoQuarto.valueOf(tipoQuarto));
 		Quarto q = null;
+		boolean disponivel = true;
 		for (Quarto quarto : quartos) {
 			if (quarto.getId().equals(id)) {
-				q = quarto;
-				break;
+				List<LocalDate[]> datasReserva = quarto.getDatasReservas();
+				for (LocalDate[] datas : datasReserva) {
+					disponivel = verificarDisponibilidade(datas, dataIni, dataFim);
+				}
+				if (disponivel) {
+					LocalDate[] data = {dataIni, dataFim};
+					quarto.adcionarDatasReserva(data);
+					return quarto;
+				}
 			}
 		}
-		quartos.remove(q);
-		return q;
+		System.out.println("O quarto não está disponível no período desejado.");
+		return null;
 	}
 	
 	public boolean verificarSeQuartoExiste(String id, String tipoQuarto) {

@@ -2,6 +2,7 @@ package teste;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -16,10 +17,12 @@ public class Menu {
 	}
 	
 	public void mostrarMenu() throws ParseException {
+		//como um quarto sempre estará disponível em alguma data (possibilidade de reservar um mesmo quarto para múltiplas datas)
+		//não faz mais sentido ter uma opção para mostrar os quartos disponíveis, já que o mostrar quartos cumpre a função desejada
 		int opcao = -1;
 		while(opcao != 0) {
 			System.out.print("\n------- Sistema de Reserva de Hotel " + hotel.getNome() + 
-					" -------\n\t(1)Mostrar quartos\n\t(2)Mostrar quartos disponíveis\n\t(3)Fazer reserva\n\t(4)Reservar quarto específico\n\t(5)Cancelar reserva\n\t(6)Mostrar reservas feitas\n\t(0)Sair\n");
+					" -------\n\t(1)Mostrar quartos\n\t(2)(não faz mais sentido) Mostrar quartos disponíveis\n\t(3)Fazer reserva\n\t(4)Reservar quarto específico\n\t(5)Cancelar reserva\n\t(6)Mostrar reservas feitas\n\t(0)Sair\n");
 			Scanner input = new Scanner(System.in);
 			opcao = input.nextInt();
 			relizarOpcao(opcao);
@@ -32,9 +35,10 @@ public class Menu {
 		case 1:
 			mostrarQuartos();
 			break;
-		case 2:
+		/* case 2:
 			mostrarQuartosDisponiveis();
 			break;
+			*/
 		case 3: 
 			//fazer reserva
 			fez = fazerReserva();
@@ -106,8 +110,15 @@ public class Menu {
 		//ler o id e encontrar a reserva a ser deletada
 		Reserva r = encontrarReserva();
 		
-		//retornar quarto para lista de quartos do tipo dele
-		devolverQuartosParaHotel(r.getQuartos());
+		//apagar a data da reserva do quarto
+		List<Quarto> quartosReserva = r.getQuartos();
+		for (Quarto quarto : quartosReserva) {
+			List<LocalDate[]> datasQuarto = quarto.getDatasReservas();
+			for (LocalDate[] datas : datasQuarto) {
+				if (datas[0].equals(r.getDataIni()) && datas[1].equals(r.getDataFim()))
+					datasQuarto.remove(datas);
+			}
+		}
 		
 		System.out.println("Reserva cancelada com sucesso.");
 		return false;
@@ -131,21 +142,19 @@ public class Menu {
 		return r;
 	}
 	
-	public void devolverQuartosParaHotel(List<Quarto> quartos) {
-		for (Quarto q : quartos) {
-			hotel.devolverQuartoParaHotel(q);
-		}
-	}
 	
 	public boolean fazerReservaQuartoEspecifico() {
 		String nomeCliente = pegarNome();
 		
-		List<Quarto> quartosReserva = pegarQuartosReservaEspecifica();
-		
-		LocalDateTime dataIni = pegarDataInicio();
+		LocalDate dataIni = pegarDataInicio();
 		
 		//pega data checkout
-		LocalDateTime dataFim = pegarDataFinal(dataIni);
+		LocalDate dataFim = pegarDataFinal(dataIni);
+		
+		List<Quarto> quartosReserva = pegarQuartosReservaEspecifica(dataIni, dataFim);
+		
+		if (quartosReserva.isEmpty())
+			return false;
 		
 		//cria a reserva
 		String id = Integer.toString(gerarIdReserva());
@@ -155,7 +164,7 @@ public class Menu {
 		
 	}
 	
-	public List<Quarto> pegarQuartosReservaEspecifica(){
+	public List<Quarto> pegarQuartosReservaEspecifica(LocalDate ini, LocalDate fim){
 		List<Quarto> quartosReserva = new ArrayList<>();
 		String id = "";
 		boolean ativo = true;
@@ -167,7 +176,7 @@ public class Menu {
 				ativo = false;
 			if (ativo) {
 				id = pegarIdQuarto(tipoQuarto);
-				Quarto q = retornarQuarto(tipoQuarto, id);
+				Quarto q = retornarQuarto(tipoQuarto, id, ini, fim);
 				
 				if (q == null)
 					ativo = false;
@@ -201,15 +210,16 @@ public class Menu {
 		String nomeCliente = pegarNome();
 		
 		//pega data de checkin
-		LocalDateTime dataIni = pegarDataInicio();
+		LocalDate dataIni = pegarDataInicio();
 		
 		//pega data checkout
-		LocalDateTime dataFim = pegarDataFinal(dataIni);
+		LocalDate dataFim = pegarDataFinal(dataIni);
 		
 		//pega os tipos de quarto escolhidos
 		List<Quarto> quartosReserva = retornarListaQuartosCliente(dataIni, dataFim);
 		
-		
+		if (quartosReserva.isEmpty())
+			return false;
 		
 		//cria a reserva
 		String id = Integer.toString(gerarIdReserva());
@@ -231,29 +241,29 @@ public class Menu {
 		return nomeCliente;
 	}
 	
-	public LocalDateTime pegarDataInicio() {
+	public LocalDate pegarDataInicio() {
 		
 		boolean ativo = true;
-		LocalDateTime dataIni = null;
+		LocalDate dataIni = null;
 		while (ativo) {
 			ativo = false;
 			System.out.print("\nDigite a data de check-in no formato dd/mm/yyyy: ");
 			String ini = lerString();
-			dataIni = LocalDateTime.parse(ini, formatter);
+			dataIni = LocalDate.parse(ini, formatter);
 		}
 		return dataIni;
 	}
 	
-	public LocalDateTime pegarDataFinal(LocalDateTime inicio) {
+	public LocalDate pegarDataFinal(LocalDate inicio) {
 		
 		boolean ativo = true;
-		LocalDateTime dataFim = null;
+		LocalDate dataFim = null;
 		while(ativo) {
 			ativo = false;
 			System.out.print("\nDigite a data de check-out no formato dd/mm/yyyy: ");
 			String fim = lerString();
 			
-			dataFim = LocalDateTime.parse(fim, formatter);
+			dataFim = LocalDate.parse(fim, formatter);
 		
 			if (dataFim.compareTo(inicio) < 0) {
 				System.out.println("Data inválida, por favor digite uma data de checkout posterior à data de checkin.");
@@ -272,7 +282,7 @@ public class Menu {
 		return id;
 	}
 	
-	public List<Quarto> retornarListaQuartosCliente(LocalDateTime dataIni, LocalDateTime dataFim){
+	public List<Quarto> retornarListaQuartosCliente(LocalDate dataIni, LocalDate dataFim){
 		List<Quarto> quartosReserva = new ArrayList<>();
 		boolean ativo = true;
 		String tipoQuarto = "";
@@ -297,19 +307,11 @@ public class Menu {
 		return quartosReserva;
 	}
 	
-	public Quarto retornarQuarto(String tipo, String id) {
-		Quarto q = hotel.devolverQuartoEspecificoParaReserva(tipo, id);
-		
-		if (q == null)
-			System.out.println("Quarto não está disponível no momento.");
-		return q;
+	public Quarto retornarQuarto(String tipo, String id, LocalDate ini, LocalDate fim) {
+		return hotel.devolverQuartoEspecificoParaReserva(tipo, id, ini, fim);
 	}	
 	
-	public Quarto retornarQuarto(String tipoQuarto, LocalDateTime dataIni, LocalDateTime dataFim) {
-		Quarto q = null;
-		if(hotel.retornarListaDeQuartos(TipoQuarto.valueOf(tipoQuarto)).isEmpty())	
-			System.out.println("Não há quarto desse tipo disponível atualmente.");
-		q = hotel.darQuartoParaReserva(tipoQuarto, dataIni, dataFim);
-		return q;
+	public Quarto retornarQuarto(String tipoQuarto, LocalDate dataIni, LocalDate dataFim) {
+		return hotel.darQuartoParaReserva(tipoQuarto, dataIni, dataFim);
 	}
 }
