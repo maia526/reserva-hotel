@@ -7,7 +7,7 @@ import java.util.*;
 public class Quarto {
 	private TipoQuarto tipo;
 	private String id;
-	private List<LocalDate[]>datasReservas;	//uma lista de vetores de tamanho 2 que guardem a data de inicio e fim de uma reserva
+	private List<LocalDate[]> datasReservas;	//uma lista de vetores de tamanho 2 que guardem a data de inicio e fim de uma reserva
 	
 	public Quarto(TipoQuarto tipo, String id) {
 		this.tipo = tipo;

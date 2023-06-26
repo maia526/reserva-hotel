@@ -89,18 +89,15 @@ public class Hotel {
 		LocalDate ini = datasReservaExistente[0];
 		LocalDate fim = datasReservaExistente[1];
 		
-		if( (dataIni.isBefore(ini) && ini.isBefore(dataFim) && dataFim.isBefore(fim)) || 
+		return !( (dataIni.isBefore(ini) && ini.isBefore(dataFim) && dataFim.isBefore(fim)) || 
 			(ini.isBefore(dataIni) && dataIni.isBefore(fim) && fim.isBefore(dataFim)) || 
-			(ini.isBefore(dataIni) && ini.isBefore(dataFim) && dataIni.isBefore(fim) && dataFim.isBefore(fim)))
-			return false;
-		return true;
+			(ini.isBefore(dataIni) && ini.isBefore(dataFim) && dataIni.isBefore(fim) && dataFim.isBefore(fim)));
 	}
 	
 	
 	
 	public Quarto devolverQuartoEspecificoParaReserva(String tipoQuarto, String id, LocalDate dataIni, LocalDate dataFim) {
 		List<Quarto> quartos = quartosPorTipo.get(TipoQuarto.valueOf(tipoQuarto));
-		Quarto q = null;
 		boolean disponivel = true;
 		for (Quarto quarto : quartos) {
 			if (quarto.getId().equals(id)) {

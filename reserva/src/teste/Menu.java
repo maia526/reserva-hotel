@@ -1,9 +1,6 @@
 package teste;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -16,30 +13,26 @@ public class Menu {
 		this.formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	}
 	
-	public void mostrarMenu() throws ParseException {
+	public void mostrarMenu() {
 		//como um quarto sempre estará disponível em alguma data (possibilidade de reservar um mesmo quarto para múltiplas datas)
 		//não faz mais sentido ter uma opção para mostrar os quartos disponíveis, já que o mostrar quartos cumpre a função desejada
 		int opcao = -1;
 		while(opcao != 0) {
 			System.out.print("\n------- Sistema de Reserva de Hotel " + hotel.getNome() + 
-					" -------\n\t(1)Mostrar quartos\n\t(2)(não faz mais sentido) Mostrar quartos disponíveis\n\t(3)Fazer reserva\n\t(4)Reservar quarto específico\n\t(5)Cancelar reserva\n\t(6)Mostrar reservas feitas\n\t(0)Sair\n");
+					" -------\n\t(1)Mostrar quartos\n\t(2)Fazer reserva\n\t(3)Reservar quarto específico\n\t(4)Cancelar reserva\n\t(5)Mostrar reservas feitas\n\t(0)Sair\n");
 			Scanner input = new Scanner(System.in);
 			opcao = input.nextInt();
 			relizarOpcao(opcao);
 		}
 	}
 	
-	public void relizarOpcao(int opc) throws ParseException {
+	public void relizarOpcao(int opc) {
 		boolean fez;
 		switch(opc) {
 		case 1:
 			mostrarQuartos();
 			break;
-		/* case 2:
-			mostrarQuartosDisponiveis();
-			break;
-			*/
-		case 3: 
+		case 2: 
 			//fazer reserva
 			fez = fazerReserva();
 			if (fez)
@@ -47,7 +40,7 @@ public class Menu {
 			else
 				System.out.println("Houve problema na reserva.");
 			break;
-		case 4:
+		case 3:
 			//fazer reserva de um quarto específico
 			fez = fazerReservaQuartoEspecifico();
 			if (fez)
@@ -55,11 +48,11 @@ public class Menu {
 			else
 				System.out.println("Houve problema na reserva.");
 			break;
-		case 5:
+		case 4:
 			//cancelar reserva
 			cancelarReserva();
 			break;
-		case 6:
+		case 5:
 			//mostrar reservas
 			mostrarReservas();
 			break;
@@ -146,6 +139,7 @@ public class Menu {
 	public boolean fazerReservaQuartoEspecifico() {
 		String nomeCliente = pegarNome();
 		
+		//pega data checkin
 		LocalDate dataIni = pegarDataInicio();
 		
 		//pega data checkout
@@ -205,7 +199,7 @@ public class Menu {
 	}
 	
 	
-	public boolean fazerReserva() throws ParseException {
+	public boolean fazerReserva(){
 		//pega o nome do cliente
 		String nomeCliente = pegarNome();
 		
