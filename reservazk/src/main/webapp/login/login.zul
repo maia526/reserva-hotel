@@ -1,0 +1,7 @@
+<?page title="Autenticação - Finep"?>
+<?style href="/resources/css/default.css" type="text/css" ?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/templateSemMenu.zul"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk xmlns:n="http://www.zkoss.org/2005/zk/native" xmlns:c="client">
+		<include src="~./authfinep/login.zul" />
+</zk>

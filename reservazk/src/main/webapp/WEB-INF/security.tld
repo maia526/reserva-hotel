@@ -1,0 +1,42 @@
+<taglib>
+    <uri>http://www.zkoss.org/demo/integration/security</uri>
+    <description>
+        Methods and actions for ZK + Spring Security
+    </description>
+
+    <function>
+        <name>isAllGranted</name>
+        <function-class>br.gov.finep.seguranca.SegurancaUtils</function-class>
+        <function-signature> boolean isAllGranted(java.lang.String authorities)</function-signature>
+        <description> 
+            Return true if the authenticated principal is granted authorities of ALL the specified roles.
+        </description>
+    </function>
+    
+    <function>
+        <name>isAuthenticated</name>
+        <function-class>br.gov.finep.seguranca.SegurancaUtils</function-class>
+        <function-signature> boolean isAuthenticated()</function-signature>
+        <description>
+            Return true if the user was authenticated.
+        </description>
+    </function>
+
+    <function>
+        <name>isInternalUser</name>
+        <function-class>br.gov.finep.authfinep.security.LoginUtil</function-class>
+        <function-signature> boolean isUsuarioInterno()</function-signature>
+        <description>
+            Return true if the user was authenticated and is a Finep user.
+        </description>
+    </function>
+
+    <function>
+        <name>isExternalUser</name>
+        <function-class>br.gov.finep.authfinep.security.LoginUtil</function-class>
+        <function-signature> boolean isUsuarioExterno()</function-signature>
+        <description>
+            Return true if the user was authenticated and is a External user.
+        </description>
+    </function>
+</taglib>

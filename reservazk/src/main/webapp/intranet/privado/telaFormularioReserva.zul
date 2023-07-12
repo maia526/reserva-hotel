@@ -1,0 +1,40 @@
+<?page title="reservazk - Finep"?>
+<?style href="/resources/css/default.css" type="text/css" ?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<zk xmlns:n="http://www.zkoss.org/2005/zk/native">
+
+	<vbox id="tudo" self="@define(content)" viewModel="@id('vm') @init('br.gov.finep.reservazk.web.TelaFormularioReservaVM')" validationMessages="@id('vmsgs')">
+	    <groupbox closable="false">
+	    	<caption label="Formulário de reserva"/>
+	    	<grid style="border:0; max-width:400px">
+	    		<columns>
+	    			<column hflex="1"/>
+	    			<column hflex="1"/>
+	    		</columns>
+	    		<rows>
+	    			<row>
+	    				<label value="Nome do cliente:"/>
+	    				<textbox value="@bind(vm.nomeCliente)"/>
+	    			</row>
+	    			<row>
+	    				<label value="E-mail do cliente:"/>
+	    				<textbox value="@bind(vm.emailCliente)"/>
+	    			</row>
+	    			<row>
+	    				<label value="Telefone do cliente:"/>
+	    				<textbox value="@bind(vm.telefoneCliente)"/>
+	    			</row>
+	    			<row>
+	    				<label value="Check-in:"/>
+	    				<datebox format="dd/MM/yyyy" valueInLocalDate="@bind(vm.checkin)"/>
+	    			</row>
+	    			<row>
+	    				<label value="Check-out:"/>
+	    				<datebox format="dd/MM/yyyy" valueInLocalDate="@bind(vm.checkout)"/>
+	    			</row>
+	    		</rows>
+	    	</grid>
+	    	<button label="Concluir reserva" onClick="@command('concluirReserva')"/>
+	    </groupbox>
+	</vbox>
+</zk>

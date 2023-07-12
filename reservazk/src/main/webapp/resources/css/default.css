@@ -1,0 +1,102 @@
+.z-notification-content {
+    display: table-cell;
+    border-radius: 0px;
+    min-height: 0px;
+    font-family: inherit;
+    border-radius: 0px;
+    width: 450px;
+    font-size: 14px;
+}
+
+.z-menu-text,.z-menuitem-text {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    display: inline-block;
+    line-height: 16px;
+    /* text-shadow: 0 1px #fff; */
+    color: #005051;
+}
+
+.z-menu-content,.z-menuitem-content {
+    color: #555;
+    display: block;
+    border: 1px solid transparent;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+    -ms-border-radius: 4px;
+    border-radius: 4px;
+    padding: 3px 6px 3px;
+    line-height: 12px;
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    z-index: 20;
+}
+
+.fundo_header {
+    background-image: url("../imagem/cabecalho_fundo.png");
+}
+
+.logo_finep {
+    padding: 10px;
+}
+
+.titulo_sistema {
+    color: #dd4f05;
+    font-size: 26px !important;
+    font-weight: bold;
+    font-family: Open Sans !important;
+    border-left: 1px solid #999;
+    padding: 20px;
+}
+
+.dados_login {
+    color: #005051;
+    font-weight: lighter;
+    font-size: 13px !important;
+    font-family: Open Sans !important;
+    margin-right: 20px
+}
+
+.div_titulo_pagina {
+    border-bottom: 1px solid #DBDBDB;
+    width: 50%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.titulo_pagina {
+    color: #005051;
+    font-size: 20px !important;
+    font-weight: bold;
+    font-family: Open Sans !important;
+}
+
+.div_sub_titulo_pagina {
+    border-bottom: 1px solid #DBDBDB;
+    width: 50%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.sub_titulo_pagina {
+    color: #005051;
+    font-size: 17px !important;
+    font-weight: bold;
+    font-family: Open Sans !important;
+}
+
+.div_descricao_pagina {
+    margin-bottom: 15px;
+}
+
+.texto_destaque {
+    font-size: 13px !important;
+    font-weight: bold;
+    font-family: Open Sans !important;
+}

@@ -1,0 +1,44 @@
+<zk>    
+    <vlayout viewModel="@id('vm') @init('br.gov.finep.reservazk.web.MenuVM')" spacing="0">
+        <hlayout width="100%" sclass="fundo_header">
+            <hbox hflex="2" align="middle">
+                <image src="http://download.finep.gov.br/logomarca/logo_finep.png" sclass="logo_finep" />
+                <label value="reservazk" sclass="titulo_sistema" />
+            </hbox>
+            <vbox hflex="1" align="end" if="${vm.isAutenticado()}">
+                <div height="66px"/>
+                <label value="${vm.infoUsuario}" sclass="dados_login" />
+            </vbox>
+        </hlayout>
+        <menubar id="menubar">
+            <menuitem id="home" iconSclass="z-icon-home" href="${vm.urlTelaHome()}" if="${vm.isAutenticado()}" />
+            <menuitem id="quartos" iconSclass="z-icon-file-o" label="Quartos" href="${vm.urlTelaQuartos()}" if="${vm.isAutenticado()}"/>
+            <menuitem id="reserva" iconSclass="z-icon-file-o" label="Reserva" href="${vm.urlTelaReserva()}" if="${vm.isAutenticado()}"/>
+            <menuitem id="auth" iconSclass="z-icon-sign-in" label="Autenticar" href="${vm.urlAutenticar()}" if="${not vm.isAutenticado()}" />
+            <menuitem id="personificar" label="Personificar" iconSclass="z-icon-user" if="${vm.isPersonificacaoPermitida()}" onClick="@command('abrirPersonificar')" />
+            <menuitem id="signout" label="Sair" onClick="@command('logout')" iconSclass="z-icon-sign-out" if="${vm.isAutenticado()}" />
+            <menuitem id="exemplo" iconSclass="z-icon-file-o" label="Quartos" href="${vm.urlTelaMVVM()}" if="${vm.isAutenticado()}"/>
+        </menubar>
+        <window id="windowPersonificar" title="Personificação" closable="false" visible="false" width="30%">
+        	<style>div.z-window-header {font-size: 14px; font-weight: bold;}</style>
+        	<vlayout spacing="20px" width="100%">
+	    		<grid>
+	    			<columns>
+	    				<column hflex="2" />
+	    				<column hflex="5" />
+	    			</columns>
+	    			<rows>
+	    				<row>
+	    					<label value="Login do usuário" />
+	    					<textbox value="@bind(vm.loginPersonificado)" />
+	    				</row>
+	    			</rows>
+	    		</grid>
+	    		<hbox width="100%" pack="end">
+	        		<button id="btnClose" label="Cancelar" iconSclass="z-icon-ban" onClick="windowPersonificar.setVisible(false)" sclass="btn-default btn-xs" mold="bs" />
+	        		<button id="btnConfirmar" label="Confirmar" iconSclass="z-icon-check" onClick="@command('personificar')" sclass="btn-primary btn-xs" mold="bs" />
+	        	</hbox>
+        	</vlayout>
+        </window> 
+    </vlayout>
+</zk>

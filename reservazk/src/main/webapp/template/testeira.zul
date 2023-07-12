@@ -1,0 +1,10 @@
+<zk>    
+    <vlayout spacing="0">
+        <hlayout width="100%" sclass="fundo_header">
+            <hbox hflex="2" align="middle">
+                <image src="http://download.finep.gov.br/logomarca/logo_finep.png" sclass="logo_finep" />
+                <label value="Autenticação" sclass="titulo_sistema" />
+            </hbox>
+        </hlayout>
+    </vlayout>
+</zk>

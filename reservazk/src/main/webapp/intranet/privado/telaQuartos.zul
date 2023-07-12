@@ -1,0 +1,78 @@
+<?page title="reservazk - Finep"?>
+<?style href="/resources/css/default.css" type="text/css" ?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<zk xmlns:n="http://www.zkoss.org/2005/zk/native">
+
+	<vbox id="tudo" self="@define(content)" viewModel="@id('vm') @init('br.gov.finep.reservazk.web.TelaQuartosVM')" validationMessages="@id('vmsgs')">
+	    <hbox id="filtroBotaoEDescricao"  spacing="30px">
+	   		<groupbox closable="false">
+	   			<caption label="Filtros (todos são opcionais)" />
+	   			<grid oddRowSclass="null" style="border:0; max-width:100%">
+	   			
+	                <columns>
+	                    <column hflex="1"/>
+	                    <column hflex="1"/>
+	                    <column hflex="1"/>
+	                    <column hflex="1"/>
+	                    <column hflex="1"/>
+	                    <column hflex="1"/>
+	                    <column hflex="1"/>
+	                    
+	                </columns>
+	                
+	                <rows>
+	                	<row>
+	                		<label style="color:navy" value="Preço"/>
+	                		<label style="color:navy" value="Tipo do quarto"/>
+	                		<label style="color:navy" value="Número"/>
+	                		<label style="color:navy" value="Hóspedes"/>
+	                		<label style="color:navy" value="Check-in"/>
+	                		<label style="color:navy" value="Check-out"/>
+	                	</row>
+	                	<row>
+		                	<div>
+			                	<checkbox label="Econômico"  checked="@bind(vm.economico)"/>
+		                		<checkbox label="Conforto" checked="@bind(vm.conforto)" />
+		                	</div>
+	               	
+	    					<combobox model="@bind(vm.tipos)" selectedItem="@bind(vm.tipoSelecionado)" cols="12">
+	                            <template name="model">
+	                                <comboitem label="@bind(each.nome)" />
+	                            </template>
+	                        </combobox>
+				   			
+	   					
+					   		<intbox id="numeroQuartoIntbox" value="@bind(vm.numeroQuarto)"/>	
+	   					
+	   						<spinner constraint="min 0" value="@bind(vm.qtdHospedes)"/>
+	   					
+	   						<datebox constraint="no past" showTodayLink="true" format="dd/MM/yyyy" valueInLocalDate="@bind(vm.checkin)"/>
+	   					
+	   						<datebox constraint="no past" showTodayLink="true" format="dd/MM/yyyy" valueInLocalDate="@bind(vm.checkout)"/>
+	    					
+	                		<button label="Filtrar" onClick="@command('filtrar')"/>
+	                	</row>
+	                </rows>
+	            </grid>    
+	   		</groupbox>
+	    </hbox>
+	    <space/>
+	   		<listbox id="quartosListbox" rows="10" model="@bind(vm.quartosFiltrado)" checkmark="true" multiple="true" 
+	   		selectedItems="@bind(vm.quartosSelecionados)">
+	   			<listhead>
+	   				<listheader width="100px" label=""><button label="Reservar" onClick="@command('reservar')"/></listheader>
+	   				<listheader label="Número"/>
+	   				<listheader label="Diária"/>
+	   				<listheader label="Tipo"/>
+	   			</listhead>
+	   			<template name="model" var = "item">
+		   			<listitem>
+		   				<listcell></listcell>
+		   				<listcell label ="@bind(item.id)"/>
+		   				<listcell label = "@bind(item.tipoQuarto.diaria)"/>
+		   				<listcell label = "@bind(item.tipoQuarto.nome)"/>
+		   			</listitem>
+	   			</template>
+	   		</listbox>
+	</vbox>
+</zk>

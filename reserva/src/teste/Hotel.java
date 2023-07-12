@@ -18,15 +18,14 @@ public class Hotel {
 		this.quartosPorTipo.put(TipoQuarto.PRESIDENCIAL, inicializarListaQuartos(TipoQuarto.PRESIDENCIAL, qtdPresidencial));
 	}
 	
-	public List<Quarto> inicializarListaQuartos(TipoQuarto tipo, int qtd){
+	public List<Quarto> inicializarListaQuartos(TipoQuarto tipoQuarto, int qtd){
 		List<Quarto> lista = new ArrayList<>();
 		int id = 0;
 		for (int i = 0; i < qtd; i++) {
-			Quarto q = new Quarto(tipo, Integer.toString(id));
+			Quarto q = new Quarto(tipoQuarto, Integer.toString(id));
 			lista.add(q);
 			id++;
 		}
-		
 		return lista;
 	}
 	
@@ -55,7 +54,7 @@ public class Hotel {
 		return false;
 	}
 	
-	public Reserva retornaReserva(String id) {
+	public Reserva retornarReserva(String id) {
 		Reserva res = null;
 		for (Reserva r : reservas) {
 			if (r.getId().equals(id)) {
@@ -96,11 +95,11 @@ public class Hotel {
 	
 	
 	
-	public Quarto devolverQuartoEspecificoParaReserva(String tipoQuarto, String id, LocalDate dataIni, LocalDate dataFim) {
+	public Quarto darQuartoEspecificoParaReserva(String tipoQuarto, String idQuarto, LocalDate dataIni, LocalDate dataFim) {
 		List<Quarto> quartos = quartosPorTipo.get(TipoQuarto.valueOf(tipoQuarto));
 		boolean disponivel = true;
 		for (Quarto quarto : quartos) {
-			if (quarto.getId().equals(id)) {
+			if (quarto.getId().equals(idQuarto)) {
 				List<LocalDate[]> datasReserva = quarto.getDatasReservas();
 				for (LocalDate[] datas : datasReserva) {
 					disponivel = verificarDisponibilidade(datas, dataIni, dataFim);
@@ -116,17 +115,17 @@ public class Hotel {
 		return null;
 	}
 	
-	public boolean verificarSeQuartoExiste(String id, String tipoQuarto) {
+	public boolean verificarSeQuartoExiste(String idQuarto, String tipoQuarto) {
 		List<Quarto> quartos = quartosPorTipo.get(TipoQuarto.valueOf(tipoQuarto));
 		for (Quarto q : quartos) {
-			if (q.getId().equals(id))
+			if (q.getId().equals(idQuarto))
 				return true;
 		}
 		return false;
 	}
 	
-	public boolean adicionarReserva(Reserva r) {
-		return reservas.add(r);
+	public boolean adicionarReserva(Reserva reserva) {
+		return reservas.add(reserva);
 	}
 
 	public String getNome() {

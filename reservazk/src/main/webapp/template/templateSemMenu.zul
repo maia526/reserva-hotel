@@ -1,0 +1,11 @@
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<?taglib uri="/WEB-INF/security.tld" prefix="sec"?>
+<zk xmlns:n="http://www.zkoss.org/2005/zk/native">
+    <vlayout style="padding-bottom: 15px;">
+        <vbox align="stretch" width="100%">
+            <include src="/template/testeira.zul" />
+        </vbox>
+
+        <div id="mainContent" self="@insert(content)" />
+    </vlayout>
+</zk>

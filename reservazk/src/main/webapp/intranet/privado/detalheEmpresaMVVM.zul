@@ -1,0 +1,49 @@
+<?page title="reservazk - Finep"?>
+<?style href="/resources/css/default.css" type="text/css" ?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<zk xmlns:n="http://www.zkoss.org/2005/zk/native">
+    <vlayout self="@define(content)" viewModel="@id('vm') @init('br.gov.finep.reservazk.web.DetalheEmpresaVM')" validationMessages="@id('vmsgs')" hflex="true">
+        <div sclass="div_titulo_pagina">
+            <label value="Detalhe Empresa" sclass="titulo_pagina" />
+        </div>
+
+        <div sclass="div_descricao_pagina">
+            <label value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis semper in metus ut pellentesque. Duis hendrerit urna quam, a tincidunt leo blandit eget. Aliquam eu orci ultrices, egestas nunc in, placerat tortor. Nulla at est nec purus euismod condimentum. Etiam molestie consectetur urna id malesuada. Vestibulum tempor ipsum a nunc tincidunt, sed sollicitudin nunc consequat. Quisque tristique mollis nibh sed pulvinar." />
+        </div>
+
+        <vbox style="width: 100%">
+            <grid style="min-width: 400px; width: 50%">
+                <auxhead sclass="category-center">
+                    <auxheader label="Empresa" colspan="2" rowspan="1" align="center"/>
+                </auxhead>
+                <columns>
+                    <column hflex="1" />
+                    <column hflex="2" />
+                </columns>
+                <rows>
+                    <row>
+                        <label value="Nome:" />
+                        <label value="@bind(vm.empresa.nome)" />
+                    </row>
+                    <row>
+                        <label value="Cidade:" />
+                        <label value="@bind(vm.empresa.cidade)" />
+                    </row>
+                    <row>
+                        <label value="UF:" />
+                        <label value="@bind(vm.empresa.uf)" />
+                    </row>
+                    <row>
+                        <label value="Faturamento:" />
+                        <label value="@bind(vm.empresa.faturamento) @converter('formattedNumber', format='R$ ###,##0.00')" />
+                    </row>
+                    <row>
+                        <label value="Data de Cadastro:" />
+                        <label value="@bind(vm.empresa.dataCadastro) @converter('formattedLocalDate', format='dd/MM/yyyy')" />
+                    </row>
+                </rows>
+            </grid>
+        </vbox>
+    </vlayout>
+
+</zk>

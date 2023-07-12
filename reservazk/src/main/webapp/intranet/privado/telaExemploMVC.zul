@@ -1,0 +1,16 @@
+<?page title="reservazk - Finep"?>
+<?style href="/resources/css/default.css" type="text/css" ?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<zk xmlns:n="http://www.zkoss.org/2005/zk/native">
+    <vlayout self="@define(content)" apply="br.gov.finep.reservazk.web.TelaExemploController" validationMessages="@id('vmsgs')" hflex="true">
+        <div sclass="div_titulo_pagina">
+            <label value="Exemplo MVC" sclass="titulo_pagina" />
+        </div>
+
+        <div sclass="div_descricao_pagina">
+            <label value="teste" />
+        </div>
+
+        <vbox id="conteudo" />
+    </vlayout>
+</zk>

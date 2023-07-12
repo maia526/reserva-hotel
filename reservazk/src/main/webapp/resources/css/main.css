@@ -1,0 +1,84 @@
+font {
+    font-size: 12px !important;
+}
+
+body {
+    font-family: Verdana, Arial, Helvetica, sans-serif !important;
+    font-size: 12px !important;
+}
+
+.ui-widget,.ui-widget .ui-widget {
+    font-size: 13px !important;
+}
+
+h1 {
+    font-size: 20px !important;
+    color: #005051;
+}
+
+h2 {
+    font-size: 16px !important;
+    color: #005051;
+}
+
+h3 {
+    font-size: 14px !important;
+    color: #005051;
+}
+
+.ui-panelgrid tr,.ui-panelgrid td {
+    border: none !important;
+}
+
+.ui-growl {
+    left: 20px;
+}
+
+.ui-panelgrid .ui-widget-content {
+    background: none !important;
+}
+
+/* INCLUÍDO PARA USAR VERDE DA MARCA FINEP */
+.ui-state-hover,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-state-focus,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus,
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+    border: 1px solid #ffffff;
+    background: #005051 url("images/ui-bg_flat_55_005051_40x100.png") 50% 50% repeat-x;
+    color: #ffffff;    
+}
+
+.ui-inputfield, .ui-radiobutton-box, .ui-datepicker-title {
+    background: #ffffff !important;
+    color: #005051 !important;
+}
+
+
+.ui-state-default a,
+.ui-state-default a:link,
+.ui-state-default a:visited {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.ui-state-active,
+.ui-state-active a,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active {
+    border: 1px thin #005051;
+    background: #ffffff url("images/ui-bg_flat_100_ffffff_40x100.png") 50% 50% repeat-x;
+    font-weight: bold;
+    color: #dd4f05 !important;
+}
+
+.ui-state-active a,
+.ui-state-active a:link,
+.ui-state-active a:visited {
+    color: #dd4f05;
+    text-decoration: none;
+}

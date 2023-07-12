@@ -1,0 +1,12 @@
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<?taglib uri="/WEB-INF/security.tld" prefix="sec"?>
+<zk xmlns:n="http://www.zkoss.org/2005/zk/native">
+    <vlayout style="padding-bottom: 15px;">
+        <vbox viewModel="@id('vm') @init('br.gov.finep.reservazk.web.MenuVM')" align="stretch" width="100%">
+            <include src="/template/menu.zul" if="${vm.isUsuarioIntranet() or (not vm.isAutenticado() and not vm.isURLExterna())}" />
+            <include src="/template/menuExterno.zul" if="${vm.isUsuarioExterno() or (vm.isUsuarioExterno() and vm.isURLExterna()) or (not vm.isAutenticado() and vm.isURLExterna())}" />
+        </vbox>
+
+        <div id="mainContent" self="@insert(content)" />
+    </vlayout>
+</zk>

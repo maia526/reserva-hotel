@@ -1,0 +1,15 @@
+<?page title="reservazk - Finep"?>
+<?style href="/resources/css/default.css" type="text/css" ?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk xmlns:n="http://www.zkoss.org/2005/zk/native">
+    
+    <vbox self="@define(content)" width="100%" align="stretch">
+        <div if="${not sec:isAuthenticated()}">Por favor, efetue o seu login.</div>
+        <div if="${sec:isAuthenticated()}" width="100%">
+            <div sclass="div_titulo_pagina">
+                <label value="Bem vindo!" sclass="titulo_pagina" />
+            </div>
+        </div>
+    </vbox>
+</zk>

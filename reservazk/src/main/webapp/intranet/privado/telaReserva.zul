@@ -1,0 +1,66 @@
+<?page title="reservazk - Finep"?>
+<?style href="/resources/css/default.css" type="text/css" ?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<zk xmlns:n="http://www.zkoss.org/2005/zk/native">	
+	<vlayout self="@define(content)" viewModel="@id('vm') @init('br.gov.finep.reservazk.web.TelaReservaVM')" validationMessages="@id('vmsgs')" hflex="true">
+	    <div sclass="div_titulo_pagina">
+	        <label value="Reservas" sclass="titulo_pagina" />
+	    </div>
+	    <vbox>
+	    	<groupbox closable="false">
+	   			<caption label="Filtros (todos são opcionais)" />
+	   			<grid oddRowSclass="null" style="border:0; max-width:100%">
+	   			
+	                <columns>
+	                    <column hflex="1"/>
+	                    <column hflex="1"/>
+	                    <column hflex="1"/>
+	                    <column hflex="1"/>
+	                    <column hflex="1"/> 
+	                </columns>
+	                
+	                <rows>
+		                <row>
+		                	<label style="color:navy" value="Tipo: "/>
+		                	<label style="color:navy" value="Nome do cliente:"/>
+		                	<label style="color:navy" value="Check-in: "/>
+		                	<label style="color:navy" value="Check-out: "/>
+		                </row>
+	                	<row>
+	                		<combobox model="@bind(vm.tipos)" selectedItem="@bind(vm.tipoSelecionado)" cols="12">
+	                            <template name="model">
+	                                <comboitem label="@bind(each.nome)" />
+	                            </template>
+	                        </combobox>
+				   			<textbox id="nomeTextBox" value="@bind(vm.nomeCliente)"/>
+					   		<datebox id="checkinCheckBox" format = "dd/MM/yyyy" valueInLocalDate="@bind(vm.checkin)"/>
+    						<datebox id="checkoutCheckBox" format = "dd/MM/yyyy" valueInLocalDate="@bind(vm.checkout)"/>
+	                		<button label="Filtrar" onClick="@command('filtrar')"/>
+	                	</row>
+	                </rows>
+	            </grid>
+	   		</groupbox>
+	    	<space/>
+	    	
+	    	<vbox>
+	    		<listbox id="quartosListbox" rows="10" checkmark="true" multiple="true" model="@bind(vm.reservasFiltradas)"
+	    		selectedItems="@bind(vm.reservasSelecionadas)">	
+		   			<listhead>
+		   				<listheader width="150px" label=""><button label="Cancelar reservas" onClick="@command('cancelarReservas')"/></listheader>
+		   				<listheader label="Resumo"/>
+		   				<listheader label=""/>
+		   			</listhead>
+		   			<template name="model" var = "item">
+			   			<listitem>
+			   				<listcell></listcell>
+			   				<listcell label="@bind(item.resumo)"/>
+			   				<listcell>
+			   					<button label="Detalhes" onClick="@command('verDetalhes', idReserva=item.id)"/>
+			   				</listcell>
+			   			</listitem>
+		   			</template>
+				</listbox>
+	    	</vbox>
+	    </vbox>
+	</vlayout>
+</zk>

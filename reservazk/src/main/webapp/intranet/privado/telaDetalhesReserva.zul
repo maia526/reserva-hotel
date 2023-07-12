@@ -1,0 +1,33 @@
+<?page title="reservazk - Finep"?>
+<?style href="/resources/css/default.css" type="text/css" ?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul"?>
+<zk xmlns:n="http://www.zkoss.org/2005/zk/native">	
+	<vlayout self="@define(content)" viewModel="@id('vm') @init('br.gov.finep.reservazk.web.TelaDetalhesReservaVM')" validationMessages="@id('vmsgs')" hflex="true">
+	    <div sclass="div_titulo_pagina">
+            <label value="Hotel Nome do Hotel" sclass="titulo_pagina" />
+        </div>
+	    <grid emptyMessage="Reserva não econtrada" model="@bind(vm.reservaLista)">
+	    	<columns>
+				<column label="Nome"/>
+				<column label="Telefone"/>
+				<column label="E-mail"/>
+				<column label="Quartos"/>
+				<column align="right" label="Valor"/>
+				<column label="Periodo"/>
+	    	</columns>
+	    	
+	    	<template name="model">
+	    		<row>
+		    		<label value="${each.nomeCliente}"/>
+		    		<label value="${each.telefoneCliente}"/>
+		    		<label value="${each.emailCliente}"/>
+		    		<label value="${each.quartos}"/>
+		    		<label value="${each.valor}"/>
+		    		<label value="${each.periodoReserva}"/>
+
+		    	</row>    		
+	    	</template>
+	    	
+	    </grid>
+	</vlayout>
+</zk>

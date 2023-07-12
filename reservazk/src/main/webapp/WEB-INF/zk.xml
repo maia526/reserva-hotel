@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zk>
+    <client-config>
+        <debug-js>false</debug-js>
+    </client-config>
+    <library-property>
+        <name>org.zkoss.web.classWebResource.cache</name>
+        <value>false</value>
+    </library-property>
+    <library-property>
+        <name>org.zkoss.theme.preferred</name>
+        <value>breeze</value>
+    </library-property>
+    <library-property>
+        <name>org.zkoss.bind.DebuggerFactory.enable</name>
+        <value>false</value>
+    </library-property>
+ 
+    <session-config>
+        <device-type>ajax</device-type>  
+<!-- o elemento abaixo está vazio para configurar que timeout só será tratado na interação seguinte do usuário,  -->
+<!-- e não de forma automática    -->
+        <timeout-uri></timeout-uri>    
+    </session-config>
+    
+    <system-config>
+       <max-upload-size>-1</max-upload-size>
+    </system-config>
+
+</zk>

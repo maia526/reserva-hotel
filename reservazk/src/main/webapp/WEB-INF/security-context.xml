@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans:beans
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+	<global-method-security
+		pre-post-annotations="enabled" />
+
+	<http pattern="/resources/**" security="none" />
+	<http pattern="/timeout/**" security="none" />
+
+	<http auto-config="false" use-expressions="true"
+		entry-point-ref="authenticationEntryPoint"
+		authentication-manager-ref="authenticationManager">
+		<headers>
+			<frame-options policy="SAMEORIGIN" />
+		</headers>
+
+		<access-denied-handler ref="acessoNegado" />
+
+		<!-- as urls da parte externa ainda estao disponiveis pro usuario interno -->
+		<intercept-url pattern="/intranet/**"
+			access="@authProvider.isUsuarioInterno(authentication)" />
+		<intercept-url pattern="/externo/privado/**"
+			access="@authProvider.isUsuarioExterno(authentication)" />
+		<intercept-url pattern="/externo/publico/**"
+			access="permitAll" />
+		<intercept-url pattern="/zkau/**" access="permitAll" />
+		<intercept-url pattern="/login/**" access="permitAll" />
+
+		<custom-filter before="SESSION_MANAGEMENT_FILTER"
+			ref="filtroEstadoSessao" />
+		<custom-filter position="CONCURRENT_SESSION_FILTER"
+			ref="concurrencyFilter" />
+		<custom-filter position="FORM_LOGIN_FILTER"
+			ref="formLoginFilter" />
+		<session-management
+			session-authentication-strategy-ref="sas" />
+
+		<csrf disabled="true" />
+
+		<logout invalidate-session="true" logout-url="/doLogout"
+			success-handler-ref="logoutSuccessHandler"
+			delete-cookies="JSESSIONID" />
+	</http>
+
+	<beans:bean id="acessoNegado"
+		class="br.gov.finep.authfinep.security.AcessoNegadoHandler">
+		<beans:property name="errorPage"
+			value="/login/acessoNegado.zul" />
+	</beans:bean>
+
+	<authentication-manager
+		alias="authenticationManager">
+		<authentication-provider ref="authProvider" />
+	</authentication-manager>
+
+	<beans:bean id="authProvider"
+		class="br.gov.finep.authfinep.security.AutenticacaoProvider">
+		<aop:scoped-proxy />
+	</beans:bean>
+
+	<beans:bean id="sessaoDestruida"
+		class="br.gov.finep.authfinep.security.FimSessaoListener" />
+
+	<beans:bean id="applicationContextProvider"
+		class="br.gov.finep.authfinep.security.ApplicationContextProvider" />
+
+	<beans:bean id="filtroEstadoSessao"
+		class="br.gov.finep.authfinep.security.FiltroEstadoSessao">
+		<!-- o parâmetro "urlSessaoInvalida" deve conter a página a ser exibida 
+			quando uma sessão expirar -->
+		<!-- se a página pertencer à própria aplicação (e não ao AuthFinep), esta 
+			não deve ser informada, e sim apenas a primeira pasta a partir do contexto -->
+		<!-- se o parâmetro "urlSessaoInvalida" for uma string vazia ("") será 
+			assumida a página de login do AuthFinep, que levará para a raiz da aplicação -->
+		<beans:constructor-arg name="urlSessaoInvalida"
+			value="/login/sessaoInvalida.zul" />
+
+		<!-- ao ser chamada, a página configurada em "urlSessaoInvalida" recebe 
+			os parâmetros "urlParaRedirecionar" (abaixo) e "requisicaoOriginal" -->
+		<!-- o parâmetro "urlParaRedirecionar" deve conter o caminho para o qual 
+			o usuári odeve ser redirecionado em caso de sessão ínválida se não for possível 
+			ir para "requisicaoOriginal" -->
+		<!-- ATENÇÃO: o atributo "value" abaixo deve ser alterado com base na aplicação 
+			em questão -->
+		<beans:constructor-arg
+			name="urlParaRedirecionar" value="/reservazk" />
+
+		<!-- o parâmetro abaixo é opcional; a linha pode ser suprimida, ou pode 
+			ser informado string vazia ("") no atributo "value" -->
+		<!-- contém o caminho "home" dos usuários externos, para onde serão direcionados 
+			em caso de acesso negado -->
+		<beans:property name="urlExternaParaRedirecionar"
+			value="/reservazk/externo" />
+
+		<!-- o parâmetro abaixo é opcional; a linha pode ser suprimida, ou pode 
+			ser informado string vazia ("") no atributo "value" -->
+		<!-- quando uma requisição AJAX chega ao servidor e a sessão está expirada, 
+			não deve haver redirecionamento, e sim prosseguir na cadeia de filtros -->
+		<!-- nos casos em que um framework emita requisições AJAX sem usar o valor 
+			"XMLHttpRequest" no header "X-Requested-With", -->
+		<!-- ou certas requisições do framework sempre devam ter seu retorno para 
+			o cliente (mesmo que a sessão esteja expirada), os caminhos utilizados devem 
+			ser informados aqui -->
+		<!-- os caminhos ("paths") utilizados pelo framework em questão devem ser 
+			informados separados por vírgula; os espaços em branco serão desconsiderados -->
+		<beans:property name="urlsAjax" value="/zkau" />
+
+		<!-- caminhos que, embora estejam no elemento http deste arquivo de configuração, 
+			não podem ser tratados por este filtro -->
+		<!-- esses caminhos ("paths") devem ser informados separados por vírgula; 
+			os espaços em branco serão desconsiderados -->
+		<beans:property name="urlsIgnoradas" value="/zkau/web" />
+
+		<!-- requisições (URL e parâmetros) que não podem ser tratadas por este 
+			filtro -->
+		<!-- para cada requisição devem ser informados URL, parâmetro(s) e valor(es) 
+			do(s) parâmetro -->
+		<!-- URL e lista de parâmetros são separados pelo caracter ":", e os pares 
+			parâmetro=valor deve ser separados por "&" caso haja mais de um -->
+		<!-- os espaços em branco serão desconsiderados -->
+		<beans:property name="requisicoesIgnoradas">
+			<beans:list>
+				<beans:value>/zkau : cmd_0=dummy</beans:value>
+			</beans:list>
+		</beans:property>
+
+		<!-- caminhos de requisições que não podem popular Security Context ao 
+			detectar cookie de Single Sign-on existente, porque criam sessão "paralela"; 
+			são requisições disparadas de forma automática, imperceptíveis para o usuário -->
+		<!-- esses caminhos ("paths") devem ser informados separados por vírgula; 
+			os espaços em branco serão desconsiderados -->
+		<beans:property name="urlsSemLoginAutomatico"
+			value="/zkau" />
+	</beans:bean>
+
+	<beans:bean id="authenticationEntryPoint" class="br.gov.finep.authfinep.security.LoginAuthenticationEntryPoint">
+	    <beans:constructor-arg value="/login/login.zul"/>
+	</beans:bean>
+	
+	<beans:bean id="concurrencyFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
+	    <beans:constructor-arg ref="sessionRegistry" />
+	    <beans:constructor-arg value="/login/sessaoInvalida.zul" />
+	</beans:bean>
+	
+	<beans:bean id="formLoginFilter" class="br.gov.finep.authfinep.security.UserPwdAuthenticationFilter">
+	    <beans:property name="sessionAuthenticationStrategy" ref="sas" />
+	    <beans:property name="authenticationManager" ref="authenticationManager" />
+	    <beans:property name="authenticationSuccessHandler">
+	        <beans:bean class="br.gov.finep.authfinep.security.UrlAuthenticationSuccessHandler" />
+	    </beans:property>
+	    <beans:property name="authenticationFailureHandler"> 
+	        <beans:bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler"> 
+	            <beans:property name="defaultFailureUrl" value="/login/login.zul?error=true"/>
+	        </beans:bean> 
+	    </beans:property> 
+	</beans:bean>
+	
+	<beans:bean id="logoutSuccessHandler" class="br.gov.finep.authfinep.security.LogoutSuccessHandler" >
+	    <beans:property name="defaultTargetUrl" value="/index.zul" />
+	</beans:bean>
+
+	<beans:bean id="sas" class="org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy">
+	    <beans:constructor-arg>
+	        <beans:list>
+	            <beans:bean class="org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy">
+	                <beans:constructor-arg ref="sessionRegistry" />
+	                <beans:property name="maximumSessions" value="-1" />
+	                <beans:property name="exceptionIfMaximumExceeded" value="false" />
+	            </beans:bean>
+	            <beans:bean class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy">
+	            </beans:bean>
+	            <beans:bean class="org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy">
+	                <beans:constructor-arg ref="sessionRegistry" />
+	            </beans:bean>
+	        </beans:list>
+	    </beans:constructor-arg>
+	</beans:bean>
+	<beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+
+</beans:beans>

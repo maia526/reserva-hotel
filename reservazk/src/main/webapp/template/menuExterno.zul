@@ -1,0 +1,20 @@
+<zk>
+    <vlayout viewModel="@id('vm') @init('br.gov.finep.reservazk.web.MenuExternoVM')" spacing="0">
+        <hlayout width="100%" sclass="fundo_header">
+            <hbox hflex="2" align="middle">
+                <image src="http://download.finep.gov.br/logomarca/logo_finep.png" sclass="logo_finep" />
+                <label value="reservazk" sclass="titulo_sistema" />
+            </hbox>
+            <vbox hflex="1" align="end" if="${vm.isAutenticado()}">
+                <div height="66px"/>
+                <label value="${vm.infoUsuario}" sclass="dados_login" />
+            </vbox>
+        </hlayout>
+        <menubar id="menubar">
+            <menuitem iconSclass="z-icon-home" href="${vm.urlIndexExterno()}" if="${vm.isAutenticado()}" />
+            <menuitem id="home" iconSclass="z-icon-file-o" label="Home" if="${vm.isAutenticado()}"/>            
+            <menuitem id="auth" iconSclass="z-icon-sign-in" label="Autenticar" href="${vm.urlAutenticar()}" if="${not vm.isAutenticado()}" />
+            <menuitem id="signout" iconSclass="z-icon-sign-out" label="Sair" onClick="@command('logout')" if="${vm.isAutenticado()}" />
+        </menubar>
+    </vlayout>
+</zk>

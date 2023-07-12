@@ -120,21 +120,44 @@ public class Menu {
 	public Reserva encontrarReserva() {
 		boolean ativo = true;
 		String idReserva = "";
-		Reserva r = null;
+		Reserva reserva = null;
 		while (ativo) {
 			ativo = false;
 			System.out.println("ID da reserva: ");
 			idReserva = lerString();
 			
-			r = hotel.retornaReserva(idReserva);
-			if (r == null) {
+			reserva = hotel.retornarReserva(idReserva);
+			if (reserva == null) {
 				System.out.println("ID não existente, por favor digite um ID válido.");
 				ativo = true;
 			}
 		}
-		return r;
+		return reserva;
 	}
 	
+	public boolean fazerReserva(){
+		//pega o nome do cliente
+		String nomeCliente = pegarNome();
+		
+		//pega data de checkin
+		LocalDate dataIni = pegarDataInicio();
+		
+		//pega data checkout
+		LocalDate dataFim = pegarDataFinal(dataIni);
+		
+		//pega os tipos de quarto escolhidos
+		List<Quarto> quartosReserva = retornarListaQuartosCliente(dataIni, dataFim);
+		
+		if (quartosReserva.isEmpty())
+			return false;
+		
+		//cria a reserva
+		String id = Integer.toString(gerarIdReserva());
+		
+		Reserva reserva = new Reserva(nomeCliente, quartosReserva, dataIni, dataFim, id);
+		return hotel.adicionarReserva(reserva);		
+	}
+
 	
 	public boolean fazerReservaQuartoEspecifico() {
 		String nomeCliente = pegarNome();
@@ -160,16 +183,14 @@ public class Menu {
 	
 	public List<Quarto> pegarQuartosReservaEspecifica(LocalDate ini, LocalDate fim){
 		List<Quarto> quartosReserva = new ArrayList<>();
-		String id = "";
 		boolean ativo = true;
-		String tipoQuarto = "";
 		while (ativo) {
 			System.out.print("\nTipo do quarto (para fim digite 0): ");
-			tipoQuarto = lerString().toUpperCase();
+			String tipoQuarto = lerString().toUpperCase();
 			if (tipoQuarto.equals("0"))
 				ativo = false;
 			if (ativo) {
-				id = pegarIdQuarto(tipoQuarto);
+				String id = pegarIdQuarto(tipoQuarto);
 				Quarto q = retornarQuarto(tipoQuarto, id, ini, fim);
 				
 				if (q == null)
@@ -197,31 +218,7 @@ public class Menu {
 		}
 		return id;
 	}
-	
-	
-	public boolean fazerReserva(){
-		//pega o nome do cliente
-		String nomeCliente = pegarNome();
 		
-		//pega data de checkin
-		LocalDate dataIni = pegarDataInicio();
-		
-		//pega data checkout
-		LocalDate dataFim = pegarDataFinal(dataIni);
-		
-		//pega os tipos de quarto escolhidos
-		List<Quarto> quartosReserva = retornarListaQuartosCliente(dataIni, dataFim);
-		
-		if (quartosReserva.isEmpty())
-			return false;
-		
-		//cria a reserva
-		String id = Integer.toString(gerarIdReserva());
-		
-		Reserva reserva = new Reserva(nomeCliente, quartosReserva, dataIni, dataFim, id);
-		return hotel.adicionarReserva(reserva);		
-	}
-	
 	public String pegarNome() {
 		String nomeCliente = "";
 		boolean ativo = true;
@@ -236,7 +233,6 @@ public class Menu {
 	}
 	
 	public LocalDate pegarDataInicio() {
-		
 		boolean ativo = true;
 		LocalDate dataIni = null;
 		while (ativo) {
@@ -249,7 +245,6 @@ public class Menu {
 	}
 	
 	public LocalDate pegarDataFinal(LocalDate inicio) {
-		
 		boolean ativo = true;
 		LocalDate dataFim = null;
 		while(ativo) {
@@ -302,7 +297,7 @@ public class Menu {
 	}
 	
 	public Quarto retornarQuarto(String tipo, String id, LocalDate ini, LocalDate fim) {
-		return hotel.devolverQuartoEspecificoParaReserva(tipo, id, ini, fim);
+		return hotel.darQuartoEspecificoParaReserva(tipo, id, ini, fim);
 	}	
 	
 	public Quarto retornarQuarto(String tipoQuarto, LocalDate dataIni, LocalDate dataFim) {
